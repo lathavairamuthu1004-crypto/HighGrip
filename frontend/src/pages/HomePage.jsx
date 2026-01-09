@@ -12,6 +12,8 @@ const HomePage = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [minRating, setMinRating] = useState(0);
 
 
   const handleCategoryChange = (category) => {
@@ -24,24 +26,41 @@ const HomePage = () => {
     });
   };
 
-  // Filter products based on selected categories (OR logic) and search term
-const filteredProducts = products.filter(product => {
-  const matchesCategory =
-    selectedCategories.length === 0 ||
-    selectedCategories.includes(product.category);
+  // Filter products based on selected categories (OR logic), search term, price, and rating
+  const filteredProducts = products.filter(product => {
+    const matchesCategory =
+      selectedCategories.length === 0 ||
+      selectedCategories.includes(product.category);
 
-  const matchesSearch =
-    product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch =
+      (product.name || "").toLowerCase().includes(searchTerm.toLowerCase());
 
-  return matchesCategory && matchesSearch;
-});
+    const productPrice = Number(product.price);
+    const matchesPrice = isNaN(productPrice) || productPrice <= priceRange;
 
-useEffect(() => {
-  fetch("http://localhost:5000/products")
-    .then(res => res.json())
-    .then(data => setProducts(data))
-    .catch(err => console.error("Failed to fetch products", err));
-}, []);
+    const matchesRating = (Number(product.averageRating) || 0) >= minRating;
+
+    return matchesCategory && matchesSearch && matchesPrice && matchesRating;
+  });
+
+  useEffect(() => {
+    fetch("http://localhost:5000/products")
+      .then(res => res.json())
+      .then(data => setProducts(data))
+      .catch(err => console.error("Failed to fetch products", err));
+
+    fetch("http://localhost:5000/categories")
+      .then(res => res.json())
+      .then(data => setCategories(data))
+      .catch(err => console.error("Failed to fetch categories", err));
+  }, []);
+
+  const clearFilters = () => {
+    setSelectedCategories([]);
+    setPriceRange(2000);
+    setMinRating(0);
+    setSearchTerm("");
+  };
 
   return (
     <div className="homepage">
@@ -58,15 +77,15 @@ useEffect(() => {
             <div className="filter-group">
               <h4>Categories</h4>
               <div className="checkbox-list">
-                {['Men', 'Women', 'Kids', 'Accessories', 'Footwear', 'Watches', 'Sports', 'Sale'].map(cat => (
-                  <label key={cat} className="checkbox-item">
+                {categories.map(cat => (
+                  <label key={cat._id} className="checkbox-item">
                     <input
                       type="checkbox"
-                      checked={selectedCategories.includes(cat)}
-                      onChange={() => handleCategoryChange(cat)}
+                      checked={selectedCategories.includes(cat.name)}
+                      onChange={() => handleCategoryChange(cat.name)}
                     />
                     <span className="checkmark"></span>
-                    {cat}
+                    {cat.name}
                   </label>
                 ))}
               </div>
@@ -94,7 +113,12 @@ useEffect(() => {
               <h4>Minimum Rating</h4>
               <div className="rating-filters">
                 {[4, 3, 2, 1].map(star => (
-                  <div key={star} className="rating-option">
+                  <div
+                    key={star}
+                    className={`rating-option ${minRating === star ? "active" : ""}`}
+                    onClick={() => setMinRating(star)}
+                    style={{ cursor: "pointer" }}
+                  >
                     <span className="stars">
                       {[...Array(5)].map((_, i) => (
                         <FaStar key={i} className={i < star ? "star-filled" : "star-empty"} />
@@ -104,10 +128,10 @@ useEffect(() => {
                   </div>
                 ))}
               </div>
-              <button className="filter-btn">All Ratings</button>
+              <button className="filter-btn" onClick={() => setMinRating(0)}>All Ratings</button>
             </div>
 
-            <button className="clear-btn" onClick={() => setSelectedCategories([])}>Clear All Filters</button>
+            <button className="clear-btn" onClick={clearFilters}>Clear All Filters</button>
           </div>
 
           {/* Special Offer Banner */}
