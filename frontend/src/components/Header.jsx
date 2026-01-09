@@ -14,6 +14,7 @@ import {
 import "./Header.css";
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
+import { categories as localCategories } from "../data/categories";
 
 const Header = ({ onSearch }) => {
   const [showCategories, setShowCategories] = useState(false);
@@ -29,13 +30,8 @@ const Header = ({ onSearch }) => {
   const { wishlist } = useWishlist();
   const { cart } = useCart(); // ✅ cart count
   useEffect(() => {
-    fetch("http://localhost:5000/categories")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Fetched Categories:", data); // Debugging line
-        setCategories(data);
-      })
-      .catch((err) => console.error("Error fetching categories:", err));
+    // verifying that we can use local static categories now
+    setCategories(localCategories);
   }, []);
 
   return (
@@ -133,37 +129,22 @@ const Header = ({ onSearch }) => {
           </div>
 
           <div className="cat-links">
-            {categories && categories.map((cat) => {
-              const rawName = cat.name || "";
-              const name = rawName.toLowerCase().trim();
-
-              const getIcon = (catName) => {
-                if (!catName) return "📦";
-                if (catName.includes("men")) return "👕";
-                if (catName.includes("women")) return "👗";
-                if (catName.includes("kid")) return "👶";
-                if (catName.includes("toy")) return "🧸";
-                if (catName.includes("shoe") || catName.includes("foot")) return "👟";
-                if (catName.includes("watch")) return "⌚";
-                if (catName.includes("sport")) return "⚽";
-                if (catName.includes("sale")) return "🔥";
-                if (catName.includes("bag") || catName.includes("access")) return "👜";
-                return "📦";
-              };
-
-              return (
-                <Link
-                  key={cat._id}
-                  to={`/category/${rawName}`}
-                  className="cat-item"
-                >
-                  <span className={`cat-icon-wrapper ${name.replace(/\s+/g, '-') || 'default'}`}>
-                    {getIcon(name)}
-                  </span>
-                  {rawName || "Category"}
-                </Link>
-              );
-            })}
+            {/* Import categories directly if not already done, or pass as props/context. 
+                For now assuming we replace the fetch logic with local import at top of file, 
+                but here we can just map the local array if we imported it. 
+                Let's use the fetched/state ones but filled from local data in useEffect */}
+            {categories.map((cat) => (
+              <Link
+                key={cat.id || cat._id}
+                to={`/category/${cat.name}`}
+                className="cat-item"
+              >
+                <span className="cat-icon-wrapper">
+                  {cat.icon || "📦"}
+                </span>
+                {cat.name}
+              </Link>
+            ))}
           </div>
         </div>
       </nav>
