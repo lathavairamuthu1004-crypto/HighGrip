@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaArrowLeft, FaPaperPlane, FaCloudUploadAlt, FaTimes } from "react-icons/fa";
+import { FaArrowLeft, FaPaperPlane, FaCloudUploadAlt, FaTimes, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./AdminSupportPage.css";
 
@@ -71,6 +71,27 @@ const AdminSupportPage = () => {
         }
     };
 
+    const handleDeleteChat = async () => {
+        if (!window.confirm("Are you sure you want to delete this conversation? This action cannot be undone.")) return;
+
+        try {
+            const token = localStorage.getItem("token");
+            const res = await fetch(`http://localhost:5000/admin/support/${activeChat._id}`, {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            if (res.ok) {
+                setChats(chats.filter(c => c._id !== activeChat._id));
+                setActiveChat(null);
+            } else {
+                alert("Failed to delete chat");
+            }
+        } catch (err) {
+            alert("Error deleting chat");
+        }
+    };
+
     return (
         <div className="admin-support-page chat-mode">
             <button className="back-btn" onClick={() => navigate("/admin")}>
@@ -121,6 +142,9 @@ const AdminSupportPage = () => {
                                     <h3>{activeChat.userName}</h3>
                                     <span style={{ fontSize: '0.8rem', color: '#64748b' }}>{activeChat.userEmail}</span>
                                 </div>
+                                <button className="delete-chat-btn" onClick={handleDeleteChat} title="Remove Chat">
+                                    <FaTrash />
+                                </button>
                             </div>
 
                             <div className="messages-area">
