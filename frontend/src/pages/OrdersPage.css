@@ -1,0 +1,523 @@
+.orders-container {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 80vh;
+}
+
+.orders-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.order-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border: 1px solid #eee;
+    transition: transform 0.2s;
+}
+
+.order-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 12px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.order-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.product-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #222;
+}
+
+.product-qty {
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.order-dates {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.date-info {
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    width: fit-content;
+}
+
+.date-info.shipped {
+    background: #eff6ff;
+    color: #3b82f6;
+    border: 1px solid #dbeafe;
+}
+
+.date-info.delivered {
+    background: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #dcfce7;
+}
+
+.order-meta {
+    text-align: right;
+}
+
+.order-price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.order-status {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-processing {
+    background: #fff7ed;
+    color: #c2410c;
+    border: 1px solid #ffedd5;
+}
+
+.status-shipped {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #dbeafe;
+}
+
+.status-delivered {
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #dcfce7;
+}
+
+.status-cancelled {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fee2e2;
+}
+
+.rate-btn {
+    background: #6366f1;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rate-btn:hover {
+    background: #4f46e5;
+    transform: translateY(-1px);
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+    background: white;
+    padding: 32px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    text-align: center;
+    color: #1e1e1e;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.star-rating {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.star-icon {
+    font-size: 2rem;
+    color: #e5e7eb;
+    cursor: pointer;
+    transition: color 0.15s;
+}
+
+.star-icon.filled {
+    color: #fbbf24;
+}
+
+.review-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e5e5e5;
+    border-radius: 8px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 100px;
+    margin-bottom: 20px;
+    transition: border-color 0.2s;
+}
+
+.review-input:focus {
+    border-color: #6366f1;
+    outline: none;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.submit-btn {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.submit-btn:hover {
+    background: #059669;
+}
+
+.cancel-btn {
+    background: #f3f4f6;
+    color: #4b5563;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.cancel-btn:hover {
+    background: #e5e7eb;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 0;
+    color: #888;
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Mobile Responsiveness */
+/* Order Stepper */
+.order-stepper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 0;
+    margin-bottom: 24px;
+    border-bottom: 1px dashed #eee;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+}
+
+.step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    color: #9ca3af;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border: 2px solid #e5e7eb;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.step-label {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #9ca3af;
+    transition: color 0.3s ease;
+}
+
+.step-line {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: #e5e7eb;
+    z-index: 1;
+}
+
+.step.active .step-circle {
+    background: #6366f1;
+    color: white;
+    border-color: #6366f1;
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+}
+
+.step.active .step-label {
+    color: #6366f1;
+}
+
+.step.completed .step-circle {
+    background: #10b981;
+    color: white;
+    border-color: #10b981;
+}
+
+.step.completed .step-label {
+    color: #10b981;
+}
+
+.step.completed .step-line {
+    background: #10b981;
+}
+
+/* Actions & Buttons */
+.order-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    gap: 12px;
+}
+
+.demo-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.demo-btn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    text-transform: uppercase;
+}
+
+.demo-btn.ship {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border-color: #dbeafe;
+}
+
+.demo-btn.deliver {
+    background: #f0fdf4;
+    color: #15803d;
+    border-color: #dcfce7;
+}
+
+.demo-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.status-ordered {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #dbeafe;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .order-header {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .order-meta {
+        text-align: left;
+    }
+
+    .order-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .order-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .rate-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .step-label {
+        font-size: 0.7rem;
+    }
+}
+/* Back to Home Button Styling */
+/* Premium Classic eCommerce Back Button */
+.back-home-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #ffffff;
+    color: #1e293b; /* Sophisticated Slate Dark */
+    border: 1px solid #e2e8f0;
+    padding: 12px 24px;
+    border-radius: 50px; /* Pill shape is more modern/premium */
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); /* Ultra smooth ease-out */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    margin-bottom: 25px;
+    width: fit-content;
+}
+
+.back-home-btn svg {
+    font-size: 0.9rem;
+    transition: transform 0.4s ease;
+    color: #6366f1; /* Brand Purple only on the icon for focus */
+}
+
+/* Hover Effects */
+.back-home-btn:hover {
+    background: #ffffff;
+    color: #4f46e5; /* Text turns purple */
+    border-color: #4f46e5;
+    transform: translateY(-3px); /* Classic "lift" effect */
+    box-shadow: 0 10px 20px rgba(79, 70, 229, 0.12); /* Soft purple glow */
+}
+
+.back-home-btn:hover svg {
+    transform: translateX(-5px); /* Icon glides left independently */
+}
+
+/* Subtle Active (Click) Effect */
+.back-home-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(79, 70, 229, 0.08);
+}
+
+/* Optional: Add a very faint underline effect on hover */
+.back-home-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    left: 50px;
+    right: 25px;
+    height: 1px;
+    background: #4f46e5;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s ease;
+    opacity: 0.3;
+}
+
+.back-home-btn:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
