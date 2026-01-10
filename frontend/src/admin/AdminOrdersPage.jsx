@@ -192,6 +192,7 @@ const AdminOrdersPage = () => {
                   <div className="address-box">
                     <p><strong>Name:</strong> {selectedOrder.shippingAddress?.firstName} {selectedOrder.shippingAddress?.lastName}</p>
                     <p><strong>Email:</strong> {selectedOrder.shippingAddress?.email}</p>
+                    <p><strong>Phone:</strong> {selectedOrder.phone || selectedOrder.shippingAddress?.phone || 'N/A'}</p>
                     <p><strong>Address:</strong> {selectedOrder.shippingAddress?.address}</p>
                     <p><strong>Method:</strong> {selectedOrder.shippingMethod?.toUpperCase()}</p>
                   </div>

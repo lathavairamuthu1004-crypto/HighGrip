@@ -79,6 +79,7 @@ const orderSchema = new mongoose.Schema({
   tax: Number,             // ✅ Added tax
   totalAmount: Number,     // ✅ Added totalAmount
   variation: String,       // ✅ Added variation (weight)
+  phone: String,           // ✅ Added phone number
   status: { type: String, default: "Ordered" },
   createdAt: { type: Date, default: Date.now },
 });

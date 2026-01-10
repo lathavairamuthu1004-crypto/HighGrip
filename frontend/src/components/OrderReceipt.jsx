@@ -44,6 +44,7 @@ const OrderReceipt = ({ order, items, onClose }) => {
                         <h3>Shipping Details</h3>
                         <p><strong>Name:</strong> {order.shippingAddress.firstName} {order.shippingAddress.lastName}</p>
                         <p><strong>Email:</strong> {order.shippingAddress.email}</p>
+                        <p><strong>Phone:</strong> {order.shippingAddress.phone}</p>
                         <p><strong>Address:</strong> {order.shippingAddress.address}</p>
                         <p><strong>Method:</strong> {order.shippingMethod.toUpperCase()}</p>
                     </div>

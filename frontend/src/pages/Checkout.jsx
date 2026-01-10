@@ -20,6 +20,7 @@ const Checkout = () => {
     firstName: '',
     lastName: '',
     email: user?.email || '',
+    phone: '',
     address: ''
   });
 
@@ -42,8 +43,8 @@ const Checkout = () => {
       return;
     }
 
-    if (!shippingInfo.firstName || !shippingInfo.address) {
-      alert("Please fill in the required shipping information");
+    if (!shippingInfo.firstName || !shippingInfo.address || !shippingInfo.phone) {
+      alert("Please fill in the required shipping information including phone number");
       return;
     }
 
@@ -59,6 +60,7 @@ const Checkout = () => {
             price: item.price * item.qty,
             userEmail: user.email,
             userName: user.name,
+            phone: shippingInfo.phone, // ✅ Sending phone number
             shippingAddress: shippingInfo,
             shippingMethod: selectedShipping,
             paymentMethod: selectedPayment,
@@ -130,6 +132,17 @@ const Checkout = () => {
                     name="email"
                     placeholder="john@example.com"
                     value={shippingInfo.email}
+                    onChange={handleShippingChange}
+                    required
+                  />
+                </div>
+                <div className="field full">
+                  <label>Phone Number</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="+91 98765 43210"
+                    value={shippingInfo.phone}
                     onChange={handleShippingChange}
                     required
                   />
@@ -354,7 +367,7 @@ const Checkout = () => {
                 <button
                   className="preview-slip-btn"
                   onClick={() => setShowReceipt(true)}
-                  disabled={!shippingInfo.firstName || !shippingInfo.address}
+                  disabled={!shippingInfo.firstName || !shippingInfo.address || !shippingInfo.phone}
                 >
                   <FileText size={16} /> Preview Slip
                 </button>
