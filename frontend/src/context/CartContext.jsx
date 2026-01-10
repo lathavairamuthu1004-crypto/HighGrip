@@ -21,21 +21,32 @@ export const CartProvider = ({ children }) => {
     }
   }, [userEmail]);
 
+  // ✅ ADDED: clearCart function
+  const clearCart = async () => {
+    // 1. Clear Local State immediately for a fast UI
+    setCart([]);
+
+    // 2. Sync with Backend (Delete the entire cart for this user)
+    if (userEmail) {
+      try {
+        await fetch(`http://localhost:5000/cart/${userEmail}`, {
+          method: "DELETE",
+        });
+        console.log("Backend cart cleared successfully");
+      } catch (err) {
+        console.error("Failed to sync clear cart:", err);
+      }
+    }
+  };
+
   const addToCart = async (product) => {
     const pid = product._id || product.id;
-
-    const newCartItem = {
-      ...product,
-      productId: pid,
-      qty: 1
-    };
+    const newCartItem = { ...product, productId: pid, qty: 1 };
 
     setCart(prev => {
       const exists = prev.find(p => p.productId === pid);
       if (exists) {
-        return prev.map(p =>
-          p.productId === pid ? { ...p, qty: p.qty + 1 } : p
-        );
+        return prev.map(p => p.productId === pid ? { ...p, qty: p.qty + 1 } : p);
       }
       return [...prev, newCartItem];
     });
@@ -52,20 +63,18 @@ export const CartProvider = ({ children }) => {
             price: product.price,
             img: product.image || product.img,
             qty: 1,
-            variation: product.size // ✅ Syncing variation
+            variation: product.size 
           })
         });
       } catch (err) {
         console.error("Failed to sync add to cart:", err);
       }
     }
-
-    return true; // ✅ IMPORTANT (for toast)
+    return true;
   };
 
   const removeFromCart = async (id) => {
     setCart(prev => prev.filter(p => p.productId !== id));
-
     if (userEmail) {
       try {
         await fetch(`http://localhost:5000/cart/${userEmail}/${id}`, {
@@ -82,13 +91,8 @@ export const CartProvider = ({ children }) => {
       removeFromCart(id);
       return;
     }
-
     setCart(prev =>
-      prev.map(p =>
-        String(p.productId) === String(id)
-          ? { ...p, qty: Number(newQty) }
-          : p
-      )
+      prev.map(p => String(p.productId) === String(id) ? { ...p, qty: Number(newQty) } : p)
     );
 
     if (userEmail) {
@@ -96,11 +100,7 @@ export const CartProvider = ({ children }) => {
         await fetch("http://localhost:5000/cart/update-qty", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userEmail,
-            productId: id,
-            qty: newQty
-          })
+          body: JSON.stringify({ userEmail, productId: id, qty: newQty })
         });
       } catch (err) {
         console.error("Failed to sync update qty:", err);
@@ -109,7 +109,8 @@ export const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQty }}>
+    // ✅ ADDED: clearCart to the Provider value
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQty, clearCart }}>
       {children}
     </CartContext.Provider>
   );

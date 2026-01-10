@@ -25,7 +25,6 @@ const ProductDetailPage = () => {
       })
       .then((data) => {
         setProduct(data);
-        // Combine main image and gallery images
         const images = [data.image, ...(data.images || [])].filter(Boolean);
         setAllImages(images);
         setCurrentImage(data.image);
@@ -47,7 +46,6 @@ const ProductDetailPage = () => {
   const [uploadImages, setUploadImages] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // User info for reviews
   const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
@@ -121,14 +119,32 @@ const ProductDetailPage = () => {
   };
 
   const handleBuyNow = () => {
-    if (product) {
-      addToCart({
-        ...product,
-        qty: quantity,
-        size: selectedSize,
-      });
-      navigate("/checkout");
-    }
+    if (!product) return;
+
+    // Calculate dynamic price based on discount logic
+    const now = new Date();
+    const isDiscountActive =
+      product.discountPercent > 0 &&
+      product.discountStart &&
+      product.discountEnd &&
+      now >= new Date(product.discountStart) &&
+      now <= new Date(product.discountEnd);
+
+    const finalPrice = isDiscountActive
+      ? (product.price * (1 - product.discountPercent / 100))
+      : product.price;
+
+    navigate("/checkout", {
+      state: {
+        buyNowItem: {
+          ...product,
+          productId: product._id || product.id,
+          qty: quantity,
+          size: selectedSize,
+          price: finalPrice // Ensure checkout gets the discounted price
+        }
+      }
+    });
   };
 
   if (loading) return <div className="container" style={{ marginTop: '100px' }}>Loading...</div>;
@@ -146,18 +162,13 @@ const ProductDetailPage = () => {
     ? (product.price * (1 - product.discountPercent / 100)).toFixed(2)
     : product.price;
 
-
-
   return (
     <div className="product-detail-page">
       <Header />
-
       <div className="container detail-container">
-        {/* Updated Modern Back Button */}
         <button className="back-btn" onClick={() => navigate(-1)}>
           <FaArrowLeft size={14} /> Back to Shop
         </button>
-
         <div className="detail-grid">
           <div className="product-image-section">
             <div className="main-image-container">
@@ -167,8 +178,6 @@ const ProductDetailPage = () => {
                 className="main-detail-img"
               />
             </div>
-
-            {/* Thumbnail Gallery */}
             {allImages.length > 1 && (
               <div className="thumbnail-gallery">
                 {allImages.map((img, i) => (
@@ -187,7 +196,6 @@ const ProductDetailPage = () => {
           <div className="product-info-section">
             <span className="detail-tag">{product.tag || "New"}</span>
             <h1 className="detail-title">{product.name}</h1>
-
             <div className="detail-rating">
               <div className="stars">
                 {[...Array(5)].map((_, i) => (
@@ -197,33 +205,24 @@ const ProductDetailPage = () => {
                   />
                 ))}
               </div>
-              <span className="reviews">
-                ({product.ratingCount || 0} ratings)
-              </span>
+              <span className="reviews">({product.ratingCount || 0} ratings)</span>
             </div>
-
             <div className="detail-price">
               {isDiscountActive ? (
                 <>
                   <span className="old-price">₹{product.price}</span>
-
                   <span className="price">
                     ₹{discountedPrice}
-                    <span className="off-text">
-                      {" "}({product.discountPercent}% OFF)
-                    </span>
+                    <span className="off-text"> ({product.discountPercent}% OFF)</span>
                   </span>
                 </>
               ) : (
                 <span className="price">₹{product.price}</span>
               )}
             </div>
-
-
             <p className="detail-description">
               {product.description || `Elevate your style with this premium quality ${product.name.toLowerCase()}.`}
             </p>
-
             <div className="selection-group">
               <h4>Select Size</h4>
               <div className="size-options">
@@ -238,7 +237,6 @@ const ProductDetailPage = () => {
                 ))}
               </div>
             </div>
-
             <div className="selection-group">
               <h4>Quantity</h4>
               <div className="quantity-control">
@@ -247,14 +245,11 @@ const ProductDetailPage = () => {
                 <button onClick={() => setQuantity(quantity + 1)}>+</button>
               </div>
             </div>
-
             <div className="action-buttons">
               <button className="add-to-cart-outline" onClick={handleAddToCart}>
                 <FaShoppingCart /> Add to Cart
               </button>
-              <button className="buy-now-btn" onClick={handleBuyNow}>
-                Buy Now
-              </button>
+              <button className="buy-now-btn" onClick={handleBuyNow}>Buy Now</button>
             </div>
           </div>
         </div>
@@ -277,7 +272,6 @@ const ProductDetailPage = () => {
                     ))}
                   </div>
                 </div>
-
                 <div className="comment-input">
                   <label>Comment:</label>
                   <textarea
@@ -287,7 +281,6 @@ const ProductDetailPage = () => {
                     required
                   ></textarea>
                 </div>
-
                 <div className="image-input">
                   <label>Upload Images:</label>
                   <input type="file" multiple accept="image/*" onChange={handleImageChange} />
@@ -302,13 +295,11 @@ const ProductDetailPage = () => {
                     ))}
                   </div>
                 </div>
-
                 <button type="submit" className="submit-review-btn" disabled={isSubmitting}>
                   {isSubmitting ? "Submitting..." : "Post Review"}
                 </button>
               </form>
             </div>
-
             <div className="reviews-list">
               {reviews.length === 0 ? (
                 <p className="no-reviews">No reviews yet. Be the first to rate this product!</p>

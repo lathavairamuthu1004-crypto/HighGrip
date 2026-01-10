@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import { useCart } from "../context/CartContext";
 import { ChevronLeft, Lock, FileText } from 'lucide-react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import OrderReceipt from '../components/OrderReceipt';
 import './Checkout.css';
 
 const Checkout = () => {
   const { cart, clearCart } = useCart();
   const navigate = useNavigate();
+  const location = useLocation();
   const user = JSON.parse(localStorage.getItem("user"));
 
-  // State for selection logic
+  // Identify if this is a single item "Buy Now" or the full "Cart"
+  const buyNowItem = location.state?.buyNowItem;
+  const itemsToPurchase = buyNowItem ? [buyNowItem] : cart;
+
   const [selectedShipping, setSelectedShipping] = useState('standard');
   const [selectedPayment, setSelectedPayment] = useState('card');
   const [showReceipt, setShowReceipt] = useState(false);
 
-  // State for shipping information
   const [shippingInfo, setShippingInfo] = useState({
     firstName: '',
     lastName: '',
@@ -29,9 +32,8 @@ const Checkout = () => {
     setShippingInfo(prev => ({ ...prev, [name]: value }));
   };
 
-  // Calculations
-  const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
   const shippingCosts = { standard: 0, express: 9.99, overnight: 24.99 };
+  const subtotal = itemsToPurchase.reduce((acc, item) => acc + (Number(item.price) * Number(item.qty)), 0);
   const shippingCost = shippingCosts[selectedShipping];
   const tax = subtotal * 0.08;
   const total = subtotal + tax + shippingCost;
@@ -44,12 +46,12 @@ const Checkout = () => {
     }
 
     if (!shippingInfo.firstName || !shippingInfo.address || !shippingInfo.phone) {
-      alert("Please fill in the required shipping information including phone number");
+      alert("Please fill in required shipping information");
       return;
     }
 
     try {
-      const orderPromises = cart.map(item =>
+      const orderPromises = itemsToPurchase.map(item =>
         fetch("http://localhost:5000/orders", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -57,47 +59,56 @@ const Checkout = () => {
             productName: item.name,
             productId: item._id || item.id,
             quantity: item.qty,
-            price: item.price * item.qty,
+            price: Number(item.price) * Number(item.qty),
             userEmail: user.email,
             userName: user.name,
-            phone: shippingInfo.phone, // ✅ Sending phone number
+            phone: shippingInfo.phone,
             shippingAddress: shippingInfo,
             shippingMethod: selectedShipping,
             paymentMethod: selectedPayment,
-            shippingCost: shippingCost,
-            tax: item.qty * (item.price * 0.08), // simplistic per-item tax
-            totalAmount: (item.price * item.qty) + (item.qty * (item.price * 0.08)) + (shippingCost / cart.length), // simplistic allocation
-            variation: item.variation || item.size // ✅ Syncing variation
+            shippingCost: shippingCost / itemsToPurchase.length,
+            tax: item.qty * (item.price * 0.08),
+            totalAmount: (item.price * item.qty) + (item.qty * (item.price * 0.08)) + (shippingCost / itemsToPurchase.length),
+            variation: item.variation || item.size || "Standard"
           })
         })
       );
 
-      await Promise.all(orderPromises);
-      if (clearCart) clearCart();
-      navigate('/order-success', { state: { purchasedItems: cart } });
+      const responses = await Promise.all(orderPromises);
+      const allSuccessful = responses.every(res => res.ok);
+
+      if (allSuccessful) {
+        console.log("Order Successful. Checking if cart should be cleared...");
+        console.log("Is Buy Now?", !!buyNowItem);
+
+        // ✅ REINFORCED CART CLEARING LOGIC
+        if (!buyNowItem) {
+          console.log("Triggering clearCart()...");
+          clearCart(); // This calls the function in your CartContext
+        }
+
+        navigate('/order-success', { state: { purchasedItems: itemsToPurchase } });
+      } else {
+        alert("Server error occurred while saving orders.");
+      }
     } catch (error) {
-      console.error("Order failed:", error);
-      alert("Failed to place order. Please try again.");
+      console.error("Order process crashed:", error);
+      alert("Failed to place order. Connection error.");
     }
   };
 
   return (
     <div className="checkout-page">
       <div className="checkout-container">
-
-        {/* Navigation */}
-        <div className="back-to-cart" onClick={() => navigate("/cart")}>
-          <ChevronLeft size={18} /> Back to Cart
+        <div className="back-to-cart" onClick={() => navigate(-1)}>
+          <ChevronLeft size={18} /> Back
         </div>
 
         <h1 className="checkout-title">Secure Checkout</h1>
 
         <div className="checkout-grid">
-
-          {/* LEFT COLUMN: FORMS */}
           <div className="checkout-main">
-
-            {/* Step 1: Shipping Information */}
+            {/* Step 1: Shipping */}
             <section className="checkout-card">
               <div className="step-header">
                 <span className="step-num">1</span>
@@ -106,274 +117,178 @@ const Checkout = () => {
               <div className="input-grid">
                 <div className="field">
                   <label>First Name</label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    placeholder="John"
-                    value={shippingInfo.firstName}
-                    onChange={handleShippingChange}
-                    required
-                  />
+                  <input type="text" name="firstName" value={shippingInfo.firstName} onChange={handleShippingChange} required />
                 </div>
                 <div className="field">
                   <label>Last Name</label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    placeholder="Doe"
-                    value={shippingInfo.lastName}
-                    onChange={handleShippingChange}
-                  />
+                  <input type="text" name="lastName" value={shippingInfo.lastName} onChange={handleShippingChange} />
                 </div>
                 <div className="field full">
                   <label>Email Address</label>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="john@example.com"
-                    value={shippingInfo.email}
-                    onChange={handleShippingChange}
-                    required
-                  />
+                  <input type="email" name="email" value={shippingInfo.email} onChange={handleShippingChange} required />
                 </div>
                 <div className="field full">
                   <label>Phone Number</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="+91 98765 43210"
-                    value={shippingInfo.phone}
-                    onChange={handleShippingChange}
-                    required
-                  />
+                  <input type="tel" name="phone" value={shippingInfo.phone} onChange={handleShippingChange} required />
                 </div>
                 <div className="field full">
                   <label>Street Address</label>
-                  <input
-                    type="text"
-                    name="address"
-                    placeholder="123 Main Street"
-                    value={shippingInfo.address}
-                    onChange={handleShippingChange}
-                    required
-                  />
+                  <input type="text" name="address" value={shippingInfo.address} onChange={handleShippingChange} required />
                 </div>
               </div>
             </section>
 
-            {/* Step 2: Shipping Method */}
+            {/* Step 2: Method */}
             <section className="checkout-card">
               <div className="step-header">
                 <span className="step-num">2</span>
                 <h3>Shipping Method</h3>
               </div>
               <div className="method-selection-container">
-                <label className={`method-option ${selectedShipping === 'standard' ? 'active' : ''}`}>
-                  <input
-                    type="radio"
-                    name="shipping"
-                    onChange={() => setSelectedShipping('standard')}
-                    checked={selectedShipping === 'standard'}
-                  />
-                  <span className="custom-radio"></span>
-                  <div className="method-details">
-                    <span className="method-title">Standard Shipping <span className="method-time">5-7 business days</span></span>
-                  </div>
-                  <span className="method-price free">FREE</span>
-                </label>
-
-                <label className={`method-option ${selectedShipping === 'express' ? 'active' : ''}`}>
-                  <input
-                    type="radio"
-                    name="shipping"
-                    onChange={() => setSelectedShipping('express')}
-                    checked={selectedShipping === 'express'}
-                  />
-                  <span className="custom-radio"></span>
-                  <div className="method-details">
-                    <span className="method-title">Express Shipping <span className="method-time">2-3 business days</span></span>
-                  </div>
-                  <span className="method-price">₹9.99</span>
-                </label>
-
-                <label className={`method-option ${selectedShipping === 'overnight' ? 'active' : ''}`}>
-                  <input
-                    type="radio"
-                    name="shipping"
-                    onChange={() => setSelectedShipping('overnight')}
-                    checked={selectedShipping === 'overnight'}
-                  />
-                  <span className="custom-radio"></span>
-                  <div className="method-details">
-                    <span className="method-title">Overnight Shipping <span className="method-time">Next business day</span></span>
-                  </div>
-                  <span className="method-price">₹24.99</span>
-                </label>
+                {['standard', 'express', 'overnight'].map((m) => (
+                  <label key={m} className={`method-option ${selectedShipping === m ? 'active' : ''}`}>
+                    <input type="radio" name="shipping" onChange={() => setSelectedShipping(m)} checked={selectedShipping === m} />
+                    <span className="custom-radio"></span>
+                    <div className="method-details">
+                      <span className="method-title">{m.charAt(0).toUpperCase() + m.slice(1)} Shipping</span>
+                    </div>
+                    <span className="method-price">{m === 'standard' ? 'FREE' : `₹${shippingCosts[m]}`}</span>
+                  </label>
+                ))}
               </div>
             </section>
 
-            {/* Step 3: Payment Method */}
-            <section className="checkout-card">
-              <div className="step-header">
-                <span className="step-num">3</span>
-                <h3>Payment Method</h3>
-              </div>
-              <div className="payment-selection-container">
+            {/* Step 3: Payment */}
+            {/* Step 3: Payment */}
+<section className="checkout-card">
+  <div className="step-header">
+    <span className="step-num">3</span>
+    <h3>Payment Method</h3>
+  </div>
 
-                {/* 1. Credit Card */}
-                <label className={`method-option ${selectedPayment === 'card' ? 'active' : ''}`}>
-                  <input
-                    type="radio"
-                    name="payment"
-                    onChange={() => setSelectedPayment('card')}
-                    checked={selectedPayment === 'card'}
-                  />
-                  <span className="custom-radio"></span>
-                  <div className="method-details"><span className="method-title">Credit / Debit Card</span></div>
-                  <div className="card-icons">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" />
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" />
-                  </div>
-                </label>
+  <div className="payment-selection-container">
 
-                {selectedPayment === 'card' && (
-                  <div className="payment-form">
-                    <div className="field full">
-                      <label>Card Number</label>
-                      <input type="text" placeholder="1234 5678 9012 3456" />
-                    </div>
-                    <div className="input-grid">
-                      <div className="field">
-                        <label>Expiry Date</label>
-                        <input type="text" placeholder="MM/YY" />
-                      </div>
-                      <div className="field">
-                        <label>CVV</label>
-                        <input type="text" placeholder="123" />
-                      </div>
-                    </div>
-                  </div>
-                )}
+    {/* Card */}
+    <label className={`method-option ${selectedPayment === 'card' ? 'active' : ''}`}>
+      <input
+        type="radio"
+        name="payment"
+        checked={selectedPayment === 'card'}
+        onChange={() => setSelectedPayment('card')}
+      />
+      <span className="custom-radio"></span>
+      <div className="method-details">
+        <span className="method-title">Credit / Debit Card</span>
+      </div>
+      <div className="card-icons">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" />
+      </div>
+    </label>
 
-                {/* 2. Google Pay */}
-                <label className={`method-option ${selectedPayment === 'gpay' ? 'active' : ''}`}>
-                  <input
-                    type="radio"
-                    name="payment"
-                    onChange={() => setSelectedPayment('gpay')}
-                    checked={selectedPayment === 'gpay'}
-                  />
-                  <span className="custom-radio"></span>
-                  <div className="method-details"><span className="method-title">Google Pay (UPI)</span></div>
-                  <div className="card-icons">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="GPay" style={{ height: '16px' }} />
-                  </div>
-                </label>
+    {/* Google Pay */}
+    <label className={`method-option ${selectedPayment === 'gpay' ? 'active' : ''}`}>
+      <input
+        type="radio"
+        name="payment"
+        checked={selectedPayment === 'gpay'}
+        onChange={() => setSelectedPayment('gpay')}
+      />
+      <span className="custom-radio"></span>
+      <div className="method-details">
+        <span className="method-title">Google Pay (UPI)</span>
+      </div>
+      <div className="card-icons">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg"
+          alt="GPay"
+          style={{ height: '16px' }}
+        />
+      </div>
+    </label>
 
-                {/* 3. Apple Pay */}
-                <label className={`method-option ${selectedPayment === 'apple' ? 'active' : ''}`}>
-                  <input
-                    type="radio"
-                    name="payment"
-                    onChange={() => setSelectedPayment('apple')}
-                    checked={selectedPayment === 'apple'}
-                  />
-                  <span className="custom-radio"></span>
-                  <div className="method-details"><span className="method-title">Apple Pay</span></div>
-                  <div className="card-icons">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_logo.svg" alt="Apple Pay" style={{ height: '18px' }} />
-                  </div>
-                </label>
+    {/* Apple Pay */}
+    <label className={`method-option ${selectedPayment === 'apple' ? 'active' : ''}`}>
+      <input
+        type="radio"
+        name="payment"
+        checked={selectedPayment === 'apple'}
+        onChange={() => setSelectedPayment('apple')}
+      />
+      <span className="custom-radio"></span>
+      <div className="method-details">
+        <span className="method-title">Apple Pay</span>
+      </div>
+      <div className="card-icons">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_logo.svg"
+          alt="Apple Pay"
+          style={{ height: '18px' }}
+        />
+      </div>
+    </label>
 
-                {/* 4. PayPal */}
-                <label className={`method-option ${selectedPayment === 'paypal' ? 'active' : ''}`}>
-                  <input
-                    type="radio"
-                    name="payment"
-                    onChange={() => setSelectedPayment('paypal')}
-                    checked={selectedPayment === 'paypal'}
-                  />
-                  <span className="custom-radio"></span>
-                  <div className="method-details"><span className="method-title">PayPal</span></div>
-                </label>
+    {/* PayPal */}
+    <label className={`method-option ${selectedPayment === 'paypal' ? 'active' : ''}`}>
+      <input
+        type="radio"
+        name="payment"
+        checked={selectedPayment === 'paypal'}
+        onChange={() => setSelectedPayment('paypal')}
+      />
+      <span className="custom-radio"></span>
+      <div className="method-details">
+        <span className="method-title">PayPal</span>
+      </div>
+    </label>
 
-                {/* 5. Cash on Delivery */}
-                <label className={`method-option ${selectedPayment === 'cod' ? 'active' : ''}`}>
-                  <input
-                    type="radio"
-                    name="payment"
-                    onChange={() => setSelectedPayment('cod')}
-                    checked={selectedPayment === 'cod'}
-                  />
-                  <span className="custom-radio"></span>
-                  <div className="method-details">
-                    <span className="method-title">Cash on Delivery (COD)</span>
-                    <p className="method-desc" style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0 0' }}>
-                      Pay when you receive the package.
-                    </p>
-                  </div>
-                </label>
-              </div>
-            </section>
+    {/* Cash on Delivery */}
+    <label className={`method-option ${selectedPayment === 'cod' ? 'active' : ''}`}>
+      <input
+        type="radio"
+        name="payment"
+        checked={selectedPayment === 'cod'}
+        onChange={() => setSelectedPayment('cod')}
+      />
+      <span className="custom-radio"></span>
+      <div className="method-details">
+        <span className="method-title">Cash on Delivery (COD)</span>
+        <p className="method-desc" style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>
+          Pay when you receive the package
+        </p>
+      </div>
+    </label>
+
+  </div>
+</section>
+
           </div>
 
-          {/* RIGHT COLUMN: ORDER SUMMARY */}
           <aside className="checkout-sidebar">
             <div className="summary-card">
               <h3>Order Summary</h3>
-
               <div className="itemized-list">
-                {cart.map(item => (
-                  <div key={item.id} className="summary-product">
-                    {/* ✅ Robust Image Loading Logic */}
-                    <img
-                      src={(item.image || item.img || "").startsWith("/")
-                        ? `http://localhost:5000${item.image || item.img}`
-                        : (item.image || item.img || "https://via.placeholder.com/80")}
-                      alt={item.name}
-                    />
+                {itemsToPurchase.map((item, idx) => (
+                  <div key={item._id || item.id || idx} className="summary-product">
+                    <img src={item.image?.startsWith("/") ? `http://localhost:5000${item.image}` : item.image} alt={item.name} />
                     <div className="sp-details">
                       <p className="sp-name">{item.name}</p>
-                      <p className="sp-qty">Qty: {item.qty}</p>
-                      <p className="sp-price">₹{item.price.toFixed(2)}</p>
+                      <p className="sp-qty">Qty: {item.qty} | {item.variation || item.size}</p>
+                      <p className="sp-price">₹{(item.price * item.qty).toFixed(2)}</p>
                     </div>
                   </div>
                 ))}
               </div>
-
               <div className="summary-totals">
-                <div className="total-row">
-                  <span>Subtotal</span>
-                  <span>₹{subtotal.toFixed(2)}</span>
-                </div>
-                <div className="total-row">
-                  <span>Shipping</span>
-                  <span className={shippingCost === 0 ? "free" : ""}>
-                    {shippingCost === 0 ? "FREE" : `₹${shippingCost.toFixed(2)}`}
-                  </span>
-                </div>
-                <div className="total-row">
-                  <span>Tax (8%)</span>
-                  <span>₹{tax.toFixed(2)}</span>
-                </div>
+                <div className="total-row"><span>Subtotal</span><span>₹{subtotal.toFixed(2)}</span></div>
+                <div className="total-row"><span>Shipping</span><span>{shippingCost === 0 ? "FREE" : `₹${shippingCost.toFixed(2)}`}</span></div>
+                <div className="total-row"><span>Tax (8%)</span><span>₹{tax.toFixed(2)}</span></div>
                 <hr />
-                <div className="total-row final">
-                  <span>Total</span>
-                  <span>₹{total.toFixed(2)}</span>
-                </div>
+                <div className="total-row final"><span>Total</span><span>₹{total.toFixed(2)}</span></div>
               </div>
-
               <div className="checkout-actions">
-                <button
-                  className="preview-slip-btn"
-                  onClick={() => setShowReceipt(true)}
-                  disabled={!shippingInfo.firstName || !shippingInfo.address || !shippingInfo.phone}
-                >
-                  <FileText size={16} /> Preview Slip
-                </button>
                 <button className="place-order-btn" onClick={handlePlaceOrder}>
-                  <Lock size={16} />
-                  {selectedPayment === 'cod' ? 'Confirm Order' : 'Place Order'}
+                  <Lock size={16} /> Confirm Order
                 </button>
               </div>
             </div>
@@ -383,16 +298,8 @@ const Checkout = () => {
 
       {showReceipt && (
         <OrderReceipt
-          order={{
-            shippingAddress: shippingInfo,
-            shippingMethod: selectedShipping,
-            paymentMethod: selectedPayment,
-            subtotal,
-            shippingCost,
-            tax,
-            totalAmount: total
-          }}
-          items={cart}
+          order={{ shippingAddress: shippingInfo, shippingMethod: selectedShipping, paymentMethod: selectedPayment, subtotal, shippingCost, tax, totalAmount: total }}
+          items={itemsToPurchase}
           onClose={() => setShowReceipt(false)}
         />
       )}
