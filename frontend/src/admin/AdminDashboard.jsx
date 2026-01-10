@@ -7,38 +7,46 @@ import {
   PlusCircle,
   Layers,
   Headphones,
-  LogOut
+  LogOut,
 } from "lucide-react";
 import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   const [stats, setStats] = useState({
     products: 0,
     orders: 0,
-    discounts: 0
+    discounts: 0,
   });
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user") || "null");
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "null");
     if (!token || !user || !user.isAdmin) {
       navigate("/login");
       return;
     }
-
     fetchStats();
   }, [navigate]);
 
   const fetchStats = async () => {
     try {
-      const productsRes = await fetch("http://localhost:5000/products");
-      const products = await productsRes.json();
+      setLoading(true);
 
-      const ordersRes = await fetch("http://localhost:5000/admin/orders");
-      const orders = await ordersRes.json();
+      const [productsRes, ordersRes] = await Promise.all([
+        fetch("http://localhost:5000/products"),
+        fetch("http://localhost:5000/admin/orders", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+      ]);
+
+      const products = await productsRes.json();
+      const ordersData = await ordersRes.json();
 
       const activeDiscounts = products.filter(
         (p) =>
@@ -49,11 +57,13 @@ const AdminDashboard = () => {
 
       setStats({
         products: products.length,
-        orders: orders.length,
-        discounts: activeDiscounts.length
+        orders: ordersData.orders.length,
+        discounts: activeDiscounts.length,
       });
     } catch (err) {
       console.error("Failed to load dashboard stats", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -62,11 +72,13 @@ const AdminDashboard = () => {
     navigate("/");
   };
 
+  if (loading) {
+    return <div className="admin-loading">Loading dashboard...</div>;
+  }
+
   return (
     <div className="admin-page">
       <div className="admin-card">
-
-        {/* Header */}
         <div className="admin-header">
           <h2>Admin Dashboard</h2>
           <button className="logout-btn" onClick={handleLogout}>
@@ -74,28 +86,26 @@ const AdminDashboard = () => {
           </button>
         </div>
 
-        {/* Stats */}
         <div className="stats-grid">
           <div className="stat-card green">
-            <Package size={28} />
+            <Package />
             <h3>{stats.products}</h3>
             <p>Total Products</p>
           </div>
 
           <div className="stat-card blue">
-            <ShoppingBag size={28} />
+            <ShoppingBag />
             <h3>{stats.orders}</h3>
             <p>Placed Orders</p>
           </div>
 
           <div className="stat-card purple">
-            <Percent size={28} />
+            <Percent />
             <h3>{stats.discounts}</h3>
             <p>Active Discounts</p>
           </div>
         </div>
 
-        {/* Actions */}
         <div className="admin-actions-grid">
           <button onClick={() => navigate("/admin/add-category")}>
             <Layers /> Add Category
@@ -117,7 +127,6 @@ const AdminDashboard = () => {
             <Headphones /> Support
           </button>
         </div>
-
       </div>
     </div>
   );
