@@ -163,13 +163,13 @@
 }
 
 .free-text {
-  color: #10b981;
+  color: #c71585;
   font-weight: 700;
 }
 
 .checkout-full-btn {
   width: 100%;
-  background: var(--primary-color);
+  background: #c71585;
   color: white;
   border: none;
   padding: 16px;
@@ -230,7 +230,7 @@
 }
 
 .classic-shop-btn {
-  background: var(--primary-color);
+  background: #c71585;
   color: white;
   padding: 14px 30px;
   border-radius: 10px;
@@ -241,7 +241,7 @@
 }
 
 .classic-shop-btn:hover {
-  background: var(--primary-dark);
+  background: orchid;
   transform: translateY(-2px);
 }
 

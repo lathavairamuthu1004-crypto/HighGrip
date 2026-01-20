@@ -3,12 +3,10 @@ import { Link } from 'react-router-dom';
 import { useWishlist } from '../context/WishlistContext';
 import ProductCard from '../components/ProductCard';
 import Header from '../components/Header';
-import { ChevronLeft } from "lucide-react"; 
+import { ChevronLeft, Heart } from "lucide-react"; 
 import './WishlistPage.css';
 
 const WishlistPage = () => {
-  // This hook ensures that if an item is removed from the Profile page, 
-  // it immediately disappears from this list too.
   const { wishlist } = useWishlist();
 
   return (
@@ -16,39 +14,49 @@ const WishlistPage = () => {
       <Header />
       
       <main className="wishlist-main container">
-        <div className="back-btn-container">
-          <Link to="/home" className="classic-browse-btn">
-            <ChevronLeft size={16} /> Back to Shop
-          </Link>
-        </div>
+        {/* Navigation Breadcrumb */}
+        
 
+<div className="back-btn-container reveal-fade">
+  <Link to="/home" className="classic-boutique-btn">
+    <ChevronLeft size={14} strokeWidth={3} /> 
+    <span>Back to Shop</span>
+  </Link>
+</div>
         {wishlist.length === 0 ? (
-          <div className="empty-wishlist-card">
-            <div className="wishlist-icon-wrapper">
-              <span className="floating-heart">❤️</span>
+          <div className="empty-state-container reveal-up">
+            <div className="icon-aesthetic-circle">
+               <Heart className="floating-heart-icon" size={40} />
             </div>
             
-            <h2 className="empty-title">Love at first sight starts here</h2>
-            
-            <p className="empty-subtitle">
-              Your wishlist is feeling a bit lonely. Tap the heart on any <br />
-              product to save it for later. Your future self will thank you.
+            <h2 className="luxury-title">The Gallery of Love</h2>
+            <p className="luxury-subtitle">
+              Your wishlist is currently a blank canvas. Start curating <br /> 
+              your favorite high-grip essentials for your collection.
             </p>
 
-            <Link to="/home" className="classic-browse-btn">
-               Find Something to Love
+            <Link to="/home" className="shop-collection-btn">
+               Explore Collection
             </Link>
           </div>
         ) : (
-          <>
-            <h2 className="page-title">My Wishlist <span>({wishlist.length})</span></h2>
-            <div className="products-grid">
-              {wishlist.map((product) => (
-                /* Ensure ProductCard uses removeFromWishlist and addToCart from Context */
-                <ProductCard key={product.id || product.productId} product={product} />
+          <div className="wishlist-filled-area">
+            <h1 className="editorial-title reveal-fade">
+              My Favorites <span className="item-count">/ {wishlist.length} items</span>
+            </h1>
+            
+            <div className="products-staggered-grid">
+              {wishlist.map((product, index) => (
+                <div 
+                  key={product.id || product.productId} 
+                  className="grid-item-reveal" 
+                  style={{ "--item-index": index }}
+                >
+                  <ProductCard product={product} />
+                </div>
               ))}
             </div>
-          </>
+          </div>
         )}
       </main>
     </div>

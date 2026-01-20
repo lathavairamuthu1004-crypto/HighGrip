@@ -21,6 +21,7 @@ import AdminSupportPage from "./admin/AdminSupportPage"; // ✅ Import Admin Sup
 import OrdersPage from "./pages/OrdersPage"; // ✅ Import Orders Page
 import CustomerService from "./pages/CustomerService"; // ✅ Import Customer Service Page
 import Profile from "./pages/Profile";
+import AboutPage from "./pages/AboutPage";
 function App() {
   return (
     <WishlistProvider>
@@ -33,6 +34,7 @@ function App() {
 
             {/* Shop Routes */}
             <Route path="/home" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/checkout" element={<Checkout />} />

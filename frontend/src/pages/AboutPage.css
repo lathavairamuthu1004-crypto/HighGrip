@@ -1,0 +1,115 @@
+:root {
+  --brand-pink: #c71585; /* Matches your About Us banner */
+  --light-blue-bg: #eaf4ff; /* Matches your Icon Bar */
+  --testimonial-pink: #ffe6f2; /* Matches your testimonial box */
+}
+
+.about-page-wrapper {
+  background-color: white;
+  color: #333;
+}
+
+/* 1. Hero Banner */
+.pink-hero {
+  background-color: var(--brand-pink);
+  color: white;
+  text-align: center;
+  padding: 60px 0;
+}
+
+.pink-hero h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.hero-nav {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* 2. Container Logic */
+.section-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 20px;
+}
+
+.intro-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+  margin-bottom: 40px;
+}
+
+.intro-title h2 { font-size: 36px; font-weight: 700; }
+.subtitle { color: #666; font-size: 18px; margin-top: 5px; }
+
+.intro-text { max-width: 500px; color: #555; line-height: 1.7; }
+
+.full-width-image-wrapper img {
+  width: 100%;
+  border-radius: 20px;
+  max-height: 500px;
+  object-fit: cover;
+}
+
+/* 3. Icon Bar */
+.icon-bar {
+  background-color: var(--light-blue-bg);
+  padding: 60px 0;
+}
+
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  text-align: center;
+}
+
+.icon-svg { font-size: 40px; margin-bottom: 15px; }
+.icon-item h3 { font-size: 18px; margin-bottom: 10px; }
+.icon-item p { font-size: 14px; color: #666; }
+
+/* 4. Why Choose Grid */
+.center-title { text-align: center; font-size: 38px; margin-bottom: 20px; }
+.center-desc { text-align: center; max-width: 800px; margin: 0 auto 50px; color: #666; }
+
+.split-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: flex-start;
+}
+
+.benefit-box {
+  margin-bottom: 30px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+}
+
+.benefit-box h3 { font-size: 22px; margin-bottom: 10px; }
+.benefit-box p { color: #666; line-height: 1.6; }
+
+.rounded-img {
+  width: 100%;
+  border-radius: 30px;
+  max-height: 600px;
+  object-fit: cover;
+}
+
+/* 5. Testimonial Box */
+.testimonial-pink-box {
+  background-color: var(--testimonial-pink);
+  border-radius: 20px;
+  padding: 60px 40px;
+  text-align: center;
+}
+
+.stars { color: #ffcc00; font-size: 20px; margin-bottom: 20px; }
+.testimonial-text { font-size: 20px; font-weight: 500; max-width: 800px; margin: 0 auto 20px; color: #1a1a1a; }
+.author { font-weight: 700; color: #333; }
+
+/* Mobile Adjustment */
+@media (max-width: 768px) {
+  .intro-header, .split-grid, .icon-grid { grid-template-columns: 1fr; flex-direction: column; }
+}

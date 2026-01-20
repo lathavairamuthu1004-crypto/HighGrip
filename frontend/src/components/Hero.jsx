@@ -1,75 +1,96 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FaArrowRight } from "react-icons/fa";
-import img1 from "../assets/Herbal Oil.png";
-import img2 from "../assets/Activated Charcoal Cow Milk Soap.png";
-import img3 from "../assets/Saffron Goat Milk Soap.png";
-import img4 from "../assets/Kuppameni Fase Wash.png";
-import img5 from "../assets/Pure Cow Ghee.png";
 import "./hero.css";
 
 const slides = [
-  { id: 1, img: img1, title: "Herbal Hair Oil", subtitle: "Secret to Long Hair", discount: "100% Organic" },
-  { id: 2, img: img2, title: "Charcoal Soap", subtitle: "Deep Cleansing", discount: "Natural Detox" },
-  { id: 3, img: img3, title: "Saffron Goat Milk Soap", subtitle: "Skin Brightening", discount: "Gentle Care" },
-  { id: 4, img: img4, title: "Kuppameni Wash", subtitle: "Acne Free Skin", discount: "Herbal Formula" },
-  { id: 5, img: img5, title: "Pure Cow Ghee", subtitle: "Traditional Taste", discount: "Farm Fresh" }
+  {
+    id: "01",
+    title: "Stay Grounded. ",
+    highlight: "Move Freely",
+    desc: "Engineered with revolutionary non-slip technology, Highgrip keeps you firmly in place during every movement.",
+    img: "/assets/grounded.png",
+    bgWord: "GRIP"
+  },
+  {
+    id: "02",
+    title: "Baby Comfort.",
+    highlight: "Safe Steps",
+    desc: "Maximum protection for crawling stages. Safety meets style for your little ones' first adventures.",
+    img: "/assets/kneeprotect.png",
+    bgWord: "SAFE"
+  },
+  {
+    id: "03", // Unique ID ensures the 3rd slide triggers
+    title: "Ankle Grip.",
+    highlight: "Daily Power",
+    desc: "The signature range: where performance and daily comfort meet seamlessly in a classic design.",
+    img: "/assets/anklegrip.png",
+    bgWord: "ELITE"
+  }
 ];
 
-function Hero() {
-  const [currentSlide, setCurrentSlide] = useState(0);
+const Hero = () => {
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+      setIndex((prev) => (prev + 1) % slides.length);
+    }, 6000);
     return () => clearInterval(timer);
   }, []);
 
-  const slide = slides[currentSlide];
+  const slide = slides[index];
 
   return (
-    <section className="hero-section-wrapper">
-      <div className="container hero-container" key={slide.id}>
-        <div className="hero-left fade-in">
-          <span className="badge-new">New Arrivals 2026</span>
+    <section className="editorial-hero">
+      {/* The Dynamic Color Background for wordings */}
+      <div className="hero-color-base"></div>
+      
+      <div className="hero-inner" key={slide.id}>
+        {/* Large Aesthetic Watermark */}
+        <div className="hero-watermark">{slide.bgWord}</div>
 
-          <h1>
-            Discover Your <br />
-            <span className="highlight-text">{slide.title}</span>
-          </h1>
+        <div className="hero-main-grid">
+          {/* 1. Wordings Section (Pink Background via CSS) */}
+          <div className="hero-text-container">
+            <div className="text-content">
+              
+              <h1 className="hero-title">
+                {slide.title} <br />
+                <span className="title-outline">{slide.highlight}</span>
+              </h1>
+              <p className="hero-description">{slide.desc}</p>
+              
+              <button className="hero-cta-button">
+                Shop Collection 
+              </button>
+            </div>
+          </div>
 
-          <p className="hero-desc">
-            Explore premium products with exclusive deals and fast delivery.
-          </p>
-
-          <div className="hero-buttons">
-            <button className="primary-btn">
-              Shop Now <FaArrowRight />
-            </button>
-            <button className="secondary-btn">View Deals</button>
+          {/* 2. Visual Section (White Background via CSS) */}
+          <div className="hero-visual-container">
+            <div className="image-wrapper">
+              <img src={slide.img} alt={slide.title} className="product-image" />
+              
+              {/* Floating Info Badge */}
+              
+            </div>
           </div>
         </div>
 
-        <div className="hero-right fade-in">
-          <div className="featured-card">
-            <img
-              src={slide.img}
-              alt={slide.title}
-              className="featured-img"
+        {/* Minimalist Navigation */}
+        <div className="hero-pagination">
+          {slides.map((_, i) => (
+            <div 
+              key={i} 
+              className={`pagination-line ${i === index ? "active" : ""}`}
+              onClick={() => setIndex(i)}
             />
-
-            <div className="float-card">
-              <div className="float-content">
-                <strong>{slide.subtitle}</strong>
-                <span>{slide.discount}</span>
-              </div>
-              <button className="mini-shop-btn">Shop</button>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
   );
-}
+};
 
 export default Hero;
