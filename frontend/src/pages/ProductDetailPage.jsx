@@ -36,7 +36,7 @@ const ProductDetailPage = () => {
       });
   }, [id]);
 
-  const [selectedSize, setSelectedSize] = useState("50g");
+  const [selectedSize, setSelectedSize] = useState("M");
   const [quantity, setQuantity] = useState(1);
 
   // Review State
@@ -106,7 +106,7 @@ const ProductDetailPage = () => {
     }
   };
 
-  const sizes = ["50g", "100g", "250g", "500g"];
+  const sizes = ["S", "M", "L", "XL"];
 
   const handleAddToCart = () => {
     if (product) {

@@ -10,11 +10,20 @@ const Header = ({ onSearch }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  
+  const [categories, setCategories] = useState([]);
+
   const navigate = useNavigate();
   const { wishlist } = useWishlist();
   const { cart } = useCart();
   const user = JSON.parse(localStorage.getItem("user"));
+
+  // Fetch categories for dropdown
+  useEffect(() => {
+    fetch("http://localhost:5000/categories")
+      .then(res => res.json())
+      .then(data => setCategories(data))
+      .catch(err => console.error("Failed to fetch categories", err));
+  }, []);
 
   // Effect to handle scroll styling
   useEffect(() => {
@@ -48,7 +57,16 @@ const Header = ({ onSearch }) => {
           <li><Link to="/home" className="nav-item">Home</Link></li>
           <li><Link to="/about" className="nav-item">About</Link></li>
           <li className="dropdown">
-            <Link to="/products" className="nav-item">Our Products</Link>
+            <Link to="/home" className="nav-item">Our Products <span className="dropdown-caret">▼</span></Link>
+            <ul className="dropdown-menu">
+              {categories.map(cat => (
+                <li key={cat._id}>
+                  <Link to={`/category/${cat.name}`} className="dropdown-item">
+                    {cat.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </li>
           <li><Link to="/about" className="nav-item">FAQ</Link></li>
           <li><Link to="/contact" className="nav-item">Contact Us</Link></li>
@@ -57,9 +75,9 @@ const Header = ({ onSearch }) => {
         {/* 4. Right: High-End Icon Set */}
         <div className="nav-right">
           <div className={`search-wrapper ${isSearchOpen ? "open" : ""}`}>
-            <input 
-              type="text" 
-              placeholder="Search our collection..." 
+            <input
+              type="text"
+              placeholder="Search our collection..."
               onChange={(e) => onSearch && onSearch(e.target.value)}
             />
             <FaSearch className="nav-icon-svg" onClick={() => setIsSearchOpen(!isSearchOpen)} />
@@ -78,14 +96,14 @@ const Header = ({ onSearch }) => {
           </Link>
 
           <div className="user-utility">
-             {user ? (
-               <>
-                 <Link to="/profile" className="nav-icon"><FaUser /></Link>
-                 <button onClick={handleLogout} className="minimal-logout">Logout</button>
-               </>
-             ) : (
-               <button onClick={() => navigate("/auth")} className="minimal-logout">Login/Signup</button>
-             )}
+            {user ? (
+              <>
+                <Link to="/profile" className="nav-icon"><FaUser /></Link>
+                <button onClick={handleLogout} className="minimal-logout">Logout</button>
+              </>
+            ) : (
+              <button onClick={() => navigate("/auth")} className="minimal-logout">Login/Signup</button>
+            )}
           </div>
 
           <div className="hamburger" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>

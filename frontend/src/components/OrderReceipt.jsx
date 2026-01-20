@@ -67,7 +67,10 @@ const OrderReceipt = ({ order, items, onClose }) => {
                             <tbody>
                                 {items.map((item, index) => (
                                     <tr key={index}>
-                                        <td>{item.name}</td>
+                                        <td>
+                                            {item.name}
+                                            {item.variation && <span style={{ display: 'block', fontSize: '12px', color: '#666' }}>Size: {item.variation}</span>}
+                                        </td>
                                         <td>{item.qty}</td>
                                         <td>₹{(item.price * item.qty).toFixed(2)}</td>
                                     </tr>

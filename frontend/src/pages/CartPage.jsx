@@ -81,7 +81,7 @@ const CartPage = () => {
                     <div className="product-details">
                       <div className="product-header">
                         <h3>{item.name}</h3>
-                        {item.variation && <p className="product-variation">Weight: {item.variation}</p>}
+                        {item.variation && <p className="product-variation">Size: {item.variation}</p>}
                         <button
                           className="delete-btn"
                           onClick={() => removeFromCart(item.productId)}

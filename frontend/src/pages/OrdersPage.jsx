@@ -7,7 +7,7 @@ const OrdersPage = () => {
     const navigate = useNavigate();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedOrder, setSelectedOrder] = useState(null); 
+    const [selectedOrder, setSelectedOrder] = useState(null);
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
     const [hover, setHover] = useState(null);
@@ -55,7 +55,7 @@ const OrdersPage = () => {
         try {
             const res = await fetch("http://localhost:5000/reviews", {
                 method: "POST",
-                body: formData, 
+                body: formData,
             });
 
             if (res.ok) {
@@ -122,7 +122,7 @@ const OrdersPage = () => {
                                     {stages.map((stage, index) => (
                                         <div key={stage} className={`step ${index <= currentStageIndex ? "active completed" : ""}`}>
                                             <div className="step-circle">
-                                                {index < currentStageIndex ? <FaCheck size={12}/> : index + 1}
+                                                {index < currentStageIndex ? <FaCheck size={12} /> : index + 1}
                                             </div>
                                             <div className="step-label">{stage}</div>
                                             {index < stages.length - 1 && <div className="step-line"></div>}
@@ -134,6 +134,7 @@ const OrdersPage = () => {
                                     <div className="product-info">
                                         <span className="product-name">{order.productName}</span>
                                         <span className="product-qty">Quantity: {order.quantity}</span>
+                                        {order.variation && <span className="product-qty" style={{ marginLeft: '10px' }}>Size: {order.variation}</span>}
                                         <div className="order-dates">
                                             {order.shippedAt && (
                                                 <span className="date-info shipped">

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
+import Header from "../components/Header";
 import "./CategoryProducts.css";
 
 const CategoryProducts = () => {
@@ -24,29 +25,32 @@ const CategoryProducts = () => {
   }, [category]);
 
   return (
-    <div className="category-page">
-      
-      {/* 🔙 BACK BUTTON */}
-      <button className="back-btn" onClick={() => navigate(-1)}>
-        ← Back
-      </button>
+    <>
+      <Header />
+      <div className="category-page container">
 
-      <h2 className="category-title">
-        {category.toUpperCase()} PRODUCTS
-      </h2>
+        {/* 🔙 BACK BUTTON */}
+        <button className="back-btn" onClick={() => navigate(-1)}>
+          ← Back
+        </button>
 
-      <div className="product-grid">
-        {loading ? (
-          <p>Loading products...</p>
-        ) : products.length === 0 ? (
-          <p>No products found</p>
-        ) : (
-          products.map(product => (
-            <ProductCard key={product._id} product={product} />
-          ))
-        )}
+        <h2 className="category-title">
+          {category.toUpperCase()} PRODUCTS
+        </h2>
+
+        <div className="product-grid">
+          {loading ? (
+            <p>Loading products...</p>
+          ) : products.length === 0 ? (
+            <p>No products found</p>
+          ) : (
+            products.map(product => (
+              <ProductCard key={product._id} product={product} />
+            ))
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

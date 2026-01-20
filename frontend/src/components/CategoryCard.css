@@ -1,0 +1,105 @@
+.category-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+}
+
+.category-image-wrapper {
+  width: 100%;
+  aspect-ratio: 3/4; /* Adjust based on preference, maybe 1/1 square or 3/4 portrait */
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 0px; /* Reduced margin to let title overlap if needed */
+  position: relative;
+}
+
+.category-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.category-card:hover .category-img {
+  transform: scale(1.05); /* Subtle zoom */
+}
+
+.category-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  margin-top: -20px; /* Pull content up slightly towards image if desired, or keep flat */
+}
+
+/* Title Styling */
+.category-title {
+  margin-top: 25px;
+  margin-bottom: 15px;
+  line-height: 1.1;
+  font-family: 'Inter', sans-serif; /* Or project font */
+}
+
+.title-highlight {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #d1d5db; /* Light grey for the first word like "Yoga" */
+  text-transform: capitalize;
+  display: block;
+}
+
+.title-secondary {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937; /* Darker for the second part "Socks" */
+  text-transform: capitalize;
+  margin-top: -15px; /* Pull it up to overlap/stack closely */
+  display: block;
+  position: relative;
+  top: -10px;
+}
+
+/* Features List */
+.features-list {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.checkbox-icon {
+  color: #ec4899; /* Pink check color from screenshot */
+  font-weight: bold;
+}
+
+/* View More Button */
+.view-more-btn {
+  background: white;
+  border: 1px solid #374151;
+  color: #374151;
+  padding: 8px 24px;
+  border-radius: 50px; /* Pill shape */
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.view-more-btn:hover {
+  background: #374151;
+  color: white;
+}

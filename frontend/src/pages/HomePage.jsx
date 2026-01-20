@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import FlashSaleBar from "../components/FlashSaleBar";
 import Hero from "../components/Hero";
 import ProductCard from "../components/ProductCard";
+import CategoryCard from "../components/CategoryCard";
 import { FaStar } from "react-icons/fa";
 import "./HomePage.css";
 import React, { useState, useEffect } from "react";
@@ -69,100 +70,23 @@ const HomePage = () => {
       <FlashSaleBar />
 
       <div className="home-container container">
-        {/* Sidebar Filters */}
-        <aside className="sidebar">
-          <div className="filter-section">
-            <h3 className="filter-title">Filters</h3>
 
-            <div className="filter-group">
-              <h4>Categories</h4>
-              <div className="checkbox-list">
-                {categories.map(cat => (
-                  <label key={cat._id} className="checkbox-item">
-                    <input
-                      type="checkbox"
-                      checked={selectedCategories.includes(cat.name)}
-                      onChange={() => handleCategoryChange(cat.name)}
-                    />
-                    <span className="checkmark"></span>
-                    {cat.name}
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div className="filter-group">
-              <h4>Price Range</h4>
-              <div className="price-slider-container">
-                <input
-                  type="range"
-                  min="0"
-                  max="2000"
-                  value={priceRange}
-                  onChange={(e) => setPriceRange(e.target.value)}
-                  className="price-slider"
-                />
-                <div className="price-values">
-                  <span>₹0</span>
-                  <span>₹{priceRange}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="filter-group">
-              <h4>Minimum Rating</h4>
-              <div className="rating-filters">
-                {[4, 3, 2, 1].map(star => (
-                  <div
-                    key={star}
-                    className={`rating-option ${minRating === star ? "active" : ""}`}
-                    onClick={() => setMinRating(star)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <span className="stars">
-                      {[...Array(5)].map((_, i) => (
-                        <FaStar key={i} className={i < star ? "star-filled" : "star-empty"} />
-                      ))}
-                    </span>
-                    <span className="rating-label">{star}+ Stars</span>
-                  </div>
-                ))}
-              </div>
-              <button className="filter-btn" onClick={() => setMinRating(0)}>All Ratings</button>
-            </div>
-
-            <button className="clear-btn" onClick={clearFilters}>Clear All Filters</button>
-          </div>
-
-          {/* Special Offer Banner */}
-          <div className="sidebar-banner">
-            <h3>Special Offer!</h3>
-            <p>Get 15% off on your first order. Use code: <strong>FIRST15</strong></p>
-          </div>
-        </aside>
 
         {/* Main Content */}
         <main className="main-content">
-          <div className="content-header">
-            <div>
-              <h2>All Products</h2>
-              <p className="result-count">{filteredProducts.length} products found</p>
-            </div>
-            <div className="sort-box">
-              <select>
-                <option>Featured</option>
-                <option>Price: Low to High</option>
-                <option>Price: High to Low</option>
-                <option>Newest</option>
-              </select>
-            </div>
-          </div>
 
-          <div className="products-grid">
-            {filteredProducts.map(p => (
-              <ProductCard key={p._id} product={p} />
-            ))}
-          </div>
+          {/* Featured Collections / Categories Layout */}
+          {!searchTerm && !selectedCategories.length && (
+            <div className="featured-categories-section">
+              <div className="category-collection-grid">
+                {products.map(p => (
+                  <CategoryCard key={p._id} product={p} />
+                ))}
+              </div>
+            </div>
+          )}
+
+
         </main>
       </div>
     </div>
