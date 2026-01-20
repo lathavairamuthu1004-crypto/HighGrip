@@ -1,9 +1,13 @@
 /* ================= PAGE ================= */
 .admin-orders-page {
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background: linear-gradient(135deg, #ffe6f2, #ffd4e5);
   padding: 40px 20px;
   font-family: 'Inter', sans-serif;
+}
+
+:root {
+  --primary-color: #c71585;
 }
 
 .ao-container {

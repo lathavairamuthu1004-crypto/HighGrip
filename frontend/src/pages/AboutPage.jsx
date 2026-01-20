@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaArrowLeft } from 'react-icons/fa';
 import Header from '../components/Header';
 import './AboutPage.css';
 
 const AboutPage = () => {
+  const navigate = useNavigate();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -10,6 +13,9 @@ const AboutPage = () => {
   return (
     <div className="about-page-wrapper">
       <Header />
+      <button className="back-btn-about" onClick={() => navigate("/home")}>
+        <FaArrowLeft /> Back to Shop
+      </button>
       
       {/* 1. Pink Hero Banner */}
       <section className="pink-hero">

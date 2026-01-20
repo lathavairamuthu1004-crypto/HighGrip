@@ -1,12 +1,12 @@
 .admin-container {
   min-height: 100vh;
-  background: #f4f1ff;
+  background: linear-gradient(135deg, #ffe6f2, #ffd4e5);
   padding: 40px;
   font-family: "Poppins", sans-serif;
 }
 
 .admin-container h1 {
-  color: #5b2dff;
+  color: #c71585;
   margin-bottom: 30px;
 }
 
@@ -20,11 +20,10 @@
   background: white;
   border-radius: 12px;
   text-decoration: none;
-  color: #5b2dff;
+  color: #c71585;
   font-weight: 600;
-  box-shadow: 0 8px 20px rgba(91, 45, 255, 0.15);
+  box-shadow: 0 8px 20px rgba(199, 21, 133, 0.15);
 }
 
 .admin-card:hover {
-  background: #ede9ff;
-}
+  background: #f8c8e0;

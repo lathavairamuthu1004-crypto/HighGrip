@@ -10,23 +10,40 @@ const Checkout = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
 
+  // Get previous addresses from localStorage
+  const previousAddresses = user ? JSON.parse(localStorage.getItem(`addresses_${user.email}`)) || [] : [];
+  
   // State for selection logic
   const [selectedShipping, setSelectedShipping] = useState('standard');
   const [selectedPayment, setSelectedPayment] = useState('card');
   const [showReceipt, setShowReceipt] = useState(false);
+  const [useExistingAddress, setUseExistingAddress] = useState(previousAddresses.length > 0);
+  const [selectedPreviousAddress, setSelectedPreviousAddress] = useState(previousAddresses.length > 0 ? 0 : null);
 
   // State for shipping information
   const [shippingInfo, setShippingInfo] = useState({
-    firstName: '',
-    lastName: '',
+    firstName: useExistingAddress && previousAddresses.length > 0 ? previousAddresses[0].firstName : '',
+    lastName: useExistingAddress && previousAddresses.length > 0 ? previousAddresses[0].lastName : '',
     email: user?.email || '',
-    phone: '',
-    address: ''
+    phone: useExistingAddress && previousAddresses.length > 0 ? previousAddresses[0].phone : '',
+    address: useExistingAddress && previousAddresses.length > 0 ? previousAddresses[0].address : ''
   });
 
   const handleShippingChange = (e) => {
     const { name, value } = e.target;
     setShippingInfo(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectPreviousAddress = (index) => {
+    const addr = previousAddresses[index];
+    setSelectedPreviousAddress(index);
+    setShippingInfo({
+      firstName: addr.firstName,
+      lastName: addr.lastName,
+      email: addr.email,
+      phone: addr.phone,
+      address: addr.address
+    });
   };
 
   // Calculations
@@ -39,7 +56,7 @@ const Checkout = () => {
   const handlePlaceOrder = async () => {
     if (!user) {
       alert("Please login to place an order");
-      navigate("/login");
+      navigate("/auth");
       return;
     }
 
@@ -49,6 +66,14 @@ const Checkout = () => {
     }
 
     try {
+      // Save address for future use
+      const addresses = previousAddresses;
+      const addressExists = addresses.some(addr => addr.address === shippingInfo.address);
+      if (!addressExists) {
+        addresses.push(shippingInfo);
+        localStorage.setItem(`addresses_${user.email}`, JSON.stringify(addresses));
+      }
+
       const orderPromises = cart.map(item =>
         fetch("http://localhost:5000/orders", {
           method: "POST",
@@ -103,6 +128,50 @@ const Checkout = () => {
                 <span className="step-num">1</span>
                 <h3>Shipping Information</h3>
               </div>
+
+              {/* Previous Addresses Option */}
+              {previousAddresses.length > 0 && (
+                <div style={{ marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid #eee' }}>
+                  <div style={{ marginBottom: '10px' }}>
+                    <input 
+                      type="radio" 
+                      checked={useExistingAddress}
+                      onChange={() => setUseExistingAddress(true)}
+                      style={{ marginRight: '10px' }}
+                    />
+                    <label style={{ fontWeight: '500' }}>Use Previous Address</label>
+                  </div>
+                  {useExistingAddress && (
+                    <div style={{ marginLeft: '25px', marginBottom: '15px' }}>
+                      {previousAddresses.map((addr, idx) => (
+                        <div key={idx} style={{ marginBottom: '10px', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer' }} 
+                          onClick={() => handleSelectPreviousAddress(idx)}>
+                          <input 
+                            type="radio" 
+                            checked={selectedPreviousAddress === idx}
+                            onChange={() => handleSelectPreviousAddress(idx)}
+                            style={{ marginRight: '10px' }}
+                          />
+                          <label style={{ cursor: 'pointer' }}>
+                            {addr.firstName} {addr.lastName} - {addr.address}, {addr.phone}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  <div style={{ marginTop: '10px' }}>
+                    <input 
+                      type="radio" 
+                      checked={!useExistingAddress}
+                      onChange={() => setUseExistingAddress(false)}
+                      style={{ marginRight: '10px' }}
+                    />
+                    <label style={{ fontWeight: '500' }}>Use New Address</label>
+                  </div>
+                </div>
+              )}
+
               <div className="input-grid">
                 <div className="field">
                   <label>First Name</label>

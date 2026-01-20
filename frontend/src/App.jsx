@@ -28,8 +28,9 @@ function App() {
       <CartProvider>
         <Router>
           <Routes>
-            {/* Auth Route */}
-            <Route path="/" element={<AuthPage />} /> {/* Default to Login */}
+            {/* Home Route - First page user sees */}
+            <Route path="/" element={<HomePage />} /> {/* Default to Home */}
+            <Route path="/auth" element={<AuthPage />} /> {/* Auth page */}
             <Route path="/admin/edit-product/:id" element={<EditProductPage />} />
 
             {/* Shop Routes */}

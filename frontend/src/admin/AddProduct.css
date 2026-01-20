@@ -1,7 +1,12 @@
 .add-product-page {
   min-height: 100vh;
-  background: #F1F8E9;
+  background: linear-gradient(135deg, #ffe6f2, #ffd4e5);
   padding: 40px;
+}
+
+:root {
+  --primary-color: #c71585;
+  --primary-dark: #a01165;
 }
 
 .back-btn {
@@ -25,7 +30,7 @@
   background: white;
   padding: 30px;
   border-radius: 14px;
-  box-shadow: 0 10px 25px rgba(46, 125, 50, 0.15);
+  box-shadow: 0 10px 25px rgba(199, 21, 133, 0.15);
   display: flex;
   flex-direction: column;
   gap: 14px;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaGoogle, FaFacebookF, FaEnvelope, FaLock, FaUser, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaGoogle, FaFacebookF, FaEnvelope, FaLock, FaUser, FaEye, FaEyeSlash, FaArrowLeft } from 'react-icons/fa';
 import './AuthPage.css';
 
 import { useNavigate } from "react-router-dom";
@@ -108,6 +108,9 @@ const AuthPage = () => {
 
     return (
         <div className="auth-container">
+            <button className="back-btn-auth" onClick={() => navigate("/home")}>
+                <FaArrowLeft /> Back to Home
+            </button>
             <div className="auth-content">
                 {/* Left Side: Branding */}
                 <motion.div

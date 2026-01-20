@@ -1,5 +1,6 @@
 :root {
-  --green: #2ecc71;
+  --pink: #c71585;
+  --light-pink: #f8c8e0;
   --blue: #3b82f6;
   --purple: #8b5cf6;
   --dark: #1f2937;
@@ -8,7 +9,7 @@
 /* Page */
 .admin-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
+  background: linear-gradient(135deg, #ffe6f2, #ffd4e5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -81,7 +82,7 @@
   opacity: 0.9;
 }
 
-.stat-card.green { background: var(--green); }
+.stat-card.green { background: var(--pink); }
 .stat-card.blue { background: var(--blue); }
 .stat-card.purple { background: var(--purple); }
 
@@ -111,8 +112,7 @@
 }
 
 .admin-actions-grid button:hover {
-  background: var(--green);
-  color: white;
+  background: var(--pink);
   transform: translateY(-3px);
 }
 

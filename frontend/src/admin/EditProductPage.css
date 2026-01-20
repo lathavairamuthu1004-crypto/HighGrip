@@ -1,14 +1,14 @@
 .edit-container {
     max-width: 600px;
     margin: 40px auto;
-    background: #f0fff4;
+    background: linear-gradient(135deg, #ffe6f2, #ffd4e5);
     padding: 30px;
     border-radius: 10px;
   }
   .back-btn {
     background: none;
     border: none;
-    color: #2e7d32;
+    color: #c71585;
     font-size: 16px;
     cursor: pointer;
     margin-bottom: 15px;

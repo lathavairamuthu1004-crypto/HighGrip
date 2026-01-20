@@ -14,6 +14,7 @@ const Header = ({ onSearch }) => {
   const navigate = useNavigate();
   const { wishlist } = useWishlist();
   const { cart } = useCart();
+  const user = JSON.parse(localStorage.getItem("user"));
 
   // Effect to handle scroll styling
   useEffect(() => {
@@ -77,8 +78,14 @@ const Header = ({ onSearch }) => {
           </Link>
 
           <div className="user-utility">
-             <Link to="/profile" className="nav-icon"><FaUser /></Link>
-             <button onClick={handleLogout} className="minimal-logout">Logout</button>
+             {user ? (
+               <>
+                 <Link to="/profile" className="nav-icon"><FaUser /></Link>
+                 <button onClick={handleLogout} className="minimal-logout">Logout</button>
+               </>
+             ) : (
+               <button onClick={() => navigate("/auth")} className="minimal-logout">Login/Signup</button>
+             )}
           </div>
 
           <div className="hamburger" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>

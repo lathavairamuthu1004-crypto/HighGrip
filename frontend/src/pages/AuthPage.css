@@ -14,11 +14,37 @@
 .auth-container {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #f0f4ff 0%, #e6e9ff 100%);
   padding: 20px;
   font-family: 'Poppins', sans-serif;
+  position: relative;
+}
+
+.back-btn-auth {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  color: #c71585;
+  border: 2px solid #c71585;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.back-btn-auth:hover {
+  background: #c71585;
+  color: white;
+  transform: translateX(-4px);
 }
 
 .auth-content {

@@ -8,6 +8,7 @@ import "./CartPage.css";
 const CartPage = () => {
   const { cart, removeFromCart, updateQty } = useCart();
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const subtotal = cart.reduce(
     (acc, item) => acc + (Number(item.unitPrice || item.price) * Number(item.qty)),
@@ -17,6 +18,15 @@ const CartPage = () => {
 
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
+
+  const handleCheckout = () => {
+    if (!user) {
+      alert("Please login to proceed with checkout");
+      navigate("/auth");
+      return;
+    }
+    navigate("/checkout");
+  };
 
   return (
     <div className="cart-page-wrapper">
@@ -127,7 +137,7 @@ const CartPage = () => {
 
                 <button
                   className="checkout-full-btn"
-                  onClick={() => navigate("/checkout")}
+                  onClick={handleCheckout}
                 >
                   Proceed to Checkout
                 </button>
