@@ -69,6 +69,32 @@
   color: #e63946;
 }
 
+/* 🛒 Cart Overlay Button */
+.cart-overlay-btn {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 3;
+  background: #c71585;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(199, 21, 133, 0.3);
+  font-size: 18px;
+}
+
+.cart-overlay-btn:hover {
+  background: #a01070;
+  transform: scale(1.1);
+  box-shadow: 0 6px 15px rgba(199, 21, 133, 0.4);
+}
 
 .image-box {
   position: relative;
@@ -266,6 +292,32 @@
 
 .add-cart-full:active {
   transform: translateY(0);
+}
+
+/* Wishlist icon button in card footer */
+.wishlist-icon-btn {
+  flex: 0 0 44px;
+  height: 44px;
+  background: #fff;
+  border: 1px solid #f3f4f6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #999;
+  transition: all 0.3s ease;
+}
+
+.wishlist-icon-btn:hover {
+  color: #e63946;
+  border-color: #e63946;
+}
+
+.wishlist-icon-btn.liked {
+  color: #e63946;
+  background: #fff0f5;
+  border-color: #e63946;
 }
 
 .added-toast {

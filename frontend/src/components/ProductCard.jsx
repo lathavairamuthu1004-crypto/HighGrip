@@ -11,29 +11,27 @@ const ProductCard = ({ product }) => {
   const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const { addToCart } = useCart();
   const [showAdded, setShowAdded] = useState(false);
+  const [showWishAdded, setShowWishAdded] = useState(false);
 
   const isWishlisted = wishlist.some(p => p._id === product._id);
 
-  const toggleWishlist = () => {
-    isWishlisted ? removeFromWishlist(product._id) : addToWishlist(product);
-  };
-
   const handleAddToCart = () => {
     addToCart(product);
-    
-    // Automatically remove from wishlist if item is moved to cart
-    if (isWishlisted) {
-      removeFromWishlist(product._id);
-    }
-
     setShowAdded(true);
     setTimeout(() => {
       setShowAdded(false);
-      // Redirect if coming from wishlist page
-      if (location.pathname === "/wishlist") {
-        navigate("/cart");
-      }
+      if (location.pathname === "/wishlist") navigate("/cart");
     }, 1500);
+  };
+
+  const toggleWishlist = () => {
+    if (isWishlisted) {
+      removeFromWishlist(product._id);
+    } else {
+      addToWishlist(product);
+      setShowWishAdded(true);
+      setTimeout(() => setShowWishAdded(false), 1500);
+    }
   };
   const now = new Date();
 
@@ -52,13 +50,18 @@ const discountedPrice = discountActive
   return (
     <div className="card">
       <div className="image-box">
-        <button className={`wishlist-btn ${isWishlisted ? "liked" : ""}`} onClick={toggleWishlist}>
+        <button className={`wishlist-btn ${isWishlisted ? "liked" : ""}`} onClick={toggleWishlist} title="Add to wishlist">
           <FaHeart />
+        </button>
+
+        <button className="cart-overlay-btn" onClick={handleAddToCart} title="Add to cart">
+          <FaShoppingCart />
         </button>
 
         <img src={`http://localhost:5000${product.image}`} alt={product.name} />
 
         {showAdded && <div className="added-toast">Product added to cart</div>}
+        {showWishAdded && <div className="added-toast">Added to wishlist</div>}
 
         <div className="overlay-actions">
           <button className="quick-view-btn" onClick={() => navigate(`/product/${product._id}`)}>
@@ -87,10 +90,6 @@ const discountedPrice = discountActive
     <span className="normal-price">₹{product.price} </span>
   )}
 </div>
-
-        <button className="add-cart-full" onClick={handleAddToCart}>
-          <FaShoppingCart /> {isWishlisted && location.pathname === "/wishlist" ? "Move to Cart" : "Add to Cart"}
-        </button>
       </div>
     </div>
   );

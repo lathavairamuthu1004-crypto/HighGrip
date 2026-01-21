@@ -154,6 +154,19 @@
   font-size: 1.2rem;
 }
 
+.admin-edit-small {
+  background: #ffe6f0;
+  color: #d63384;
+  border: 1px solid #ff8fb1;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .detail-description {
   color: #57606f;
   line-height: 1.6;

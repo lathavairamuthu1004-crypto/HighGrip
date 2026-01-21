@@ -80,10 +80,15 @@ const AdminDashboard = () => {
     <div className="admin-page">
       <div className="admin-card">
         <div className="admin-header">
-          <h2>Admin Dashboard</h2>
-          <button className="logout-btn" onClick={handleLogout}>
-            <LogOut size={16} /> Logout
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
+            <img src="/logoo.png" alt="Logo" style={{ height: 60, width: 'auto' }} />
+            <h2 style={{ margin: 0, fontSize: '32px' }}>Admin Dashboard</h2>
+          </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button className="logout-btn" onClick={handleLogout}>
+              <LogOut size={16} /> Logout
+            </button>
+          </div>
         </div>
 
         <div className="stats-grid">

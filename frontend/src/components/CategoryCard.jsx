@@ -1,10 +1,20 @@
 import React from "react";
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaShoppingCart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 import "./CategoryCard.css";
 
 const CategoryCard = ({ product }) => {
     const navigate = useNavigate();
+    const { addToCart } = useCart();
+    const [showCartAdded, setShowCartAdded] = React.useState(false);
+
+    const handleAddToCart = (e) => {
+        e.stopPropagation();
+        addToCart(product);
+        setShowCartAdded(true);
+        setTimeout(() => setShowCartAdded(false), 1500);
+    };
 
     // Parse title to roughly match the stacked style "Yoga \n Socks"
     const titleWords = product.name.split(" ");
@@ -19,6 +29,10 @@ const CategoryCard = ({ product }) => {
                     alt={product.name}
                     className="category-img"
                 />
+                <button className="cart-overlay-btn" onClick={handleAddToCart} title="Add to cart">
+                    <FaShoppingCart />
+                </button>
+                {showCartAdded && <div className="added-toast">Product added to cart</div>}
             </div>
 
             <div className="category-content">

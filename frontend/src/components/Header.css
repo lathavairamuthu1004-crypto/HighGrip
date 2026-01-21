@@ -194,6 +194,20 @@
   color: var(--primary-pink);
 }
 
+.view-store-btn {
+  background: var(--primary-pink);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.view-store-btn:hover {
+  opacity: 0.95;
+}
+
 /* Mobile Styling */
 .hamburger {
   display: none;

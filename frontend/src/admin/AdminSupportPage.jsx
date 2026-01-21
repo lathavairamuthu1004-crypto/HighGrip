@@ -13,18 +13,26 @@ const AdminSupportPage = () => {
 
     useEffect(() => {
         fetchChats();
+        // Poll for updates every 5 seconds
+        const interval = setInterval(fetchChats, 5000);
+        return () => clearInterval(interval);
     }, []);
 
     const fetchChats = async () => {
         try {
             const token = localStorage.getItem("token");
-            const res = await fetch("http://localhost:5000/support/admin", {
+            const res = await fetch("http://localhost:5000/admin/support", {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const data = await res.json();
-            setChats(data);
+            console.log("Admin chats fetched:", data);
+            if (Array.isArray(data)) {
+                setChats(data);
+            } else if (data && typeof data === 'object') {
+                setChats([data]);
+            }
         } catch (err) {
-            console.error("Failed to fetch chats");
+            console.error("Failed to fetch chats:", err);
         }
     };
 

@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { useCart } from "../context/CartContext";
 import { ChevronLeft, Lock, FileText } from 'lucide-react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import OrderReceipt from '../components/OrderReceipt';
 import './Checkout.css';
 
 const Checkout = () => {
   const { cart, clearCart } = useCart();
   const navigate = useNavigate();
+  const location = useLocation();
   const user = JSON.parse(localStorage.getItem("user"));
+
+  // Handle Buy Now item (single item checkout)
+  const buyNowItem = location.state?.buyNowItem;
+  const checkoutItems = buyNowItem ? [buyNowItem] : cart;
 
   // Get previous addresses from localStorage
   const previousAddresses = user ? JSON.parse(localStorage.getItem(`addresses_${user.email}`)) || [] : [];
@@ -17,6 +22,7 @@ const Checkout = () => {
   const [selectedShipping, setSelectedShipping] = useState('standard');
   const [selectedPayment, setSelectedPayment] = useState('card');
   const [showReceipt, setShowReceipt] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [useExistingAddress, setUseExistingAddress] = useState(previousAddresses.length > 0);
   const [selectedPreviousAddress, setSelectedPreviousAddress] = useState(previousAddresses.length > 0 ? 0 : null);
 
@@ -47,7 +53,7 @@ const Checkout = () => {
   };
 
   // Calculations
-  const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+  const subtotal = checkoutItems.reduce((acc, item) => acc + item.price * item.qty, 0);
   const shippingCosts = { standard: 0, express: 9.99, overnight: 24.99 };
   const shippingCost = shippingCosts[selectedShipping];
   const tax = subtotal * 0.08;
@@ -55,8 +61,8 @@ const Checkout = () => {
 
   const handlePlaceOrder = async () => {
     if (!user) {
-      alert("Please login to place an order");
-      navigate("/auth");
+      // show centered pink login modal
+      setShowLoginModal(true);
       return;
     }
 
@@ -74,7 +80,7 @@ const Checkout = () => {
         localStorage.setItem(`addresses_${user.email}`, JSON.stringify(addresses));
       }
 
-      const orderPromises = cart.map(item =>
+      const orderPromises = checkoutItems.map(item =>
         fetch("http://localhost:5000/orders", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -85,21 +91,21 @@ const Checkout = () => {
             price: item.price * item.qty,
             userEmail: user.email,
             userName: user.name,
-            phone: shippingInfo.phone, // ✅ Sending phone number
+            phone: shippingInfo.phone,
             shippingAddress: shippingInfo,
             shippingMethod: selectedShipping,
             paymentMethod: selectedPayment,
             shippingCost: shippingCost,
-            tax: item.qty * (item.price * 0.08), // simplistic per-item tax
-            totalAmount: (item.price * item.qty) + (item.qty * (item.price * 0.08)) + (shippingCost / cart.length), // simplistic allocation
-            variation: item.variation || item.size // ✅ Syncing variation
+            tax: item.qty * (item.price * 0.08),
+            totalAmount: (item.price * item.qty) + (item.qty * (item.price * 0.08)) + (shippingCost / checkoutItems.length),
+            variation: item.variation || item.size
           })
         })
       );
 
       await Promise.all(orderPromises);
-      if (clearCart) clearCart();
-      navigate('/order-success', { state: { purchasedItems: cart } });
+      if (clearCart && !buyNowItem) clearCart();
+      navigate('/order-success', { state: { purchasedItems: checkoutItems } });
     } catch (error) {
       console.error("Order failed:", error);
       alert("Failed to place order. Please try again.");
@@ -392,7 +398,7 @@ const Checkout = () => {
               <h3>Order Summary</h3>
 
               <div className="itemized-list">
-                {cart.map(item => (
+                {checkoutItems.map(item => (
                   <div key={item.id} className="summary-product">
                     {/* ✅ Robust Image Loading Logic */}
                     <img
@@ -461,9 +467,22 @@ const Checkout = () => {
             tax,
             totalAmount: total
           }}
-          items={cart}
+          items={checkoutItems}
           onClose={() => setShowReceipt(false)}
         />
+      )}
+
+      {showLoginModal && (
+        <div className="login-modal-overlay" onClick={() => setShowLoginModal(false)}>
+          <div className="login-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 420, width: '90%', background: '#fff0f6', border: '2px solid #ff8fb1', borderRadius: 12, padding: 20, textAlign: 'center' }}>
+            <h3 style={{ marginTop: 0, color: '#d63384' }}>Please login to place an order</h3>
+            <p style={{ color: '#6b7280' }}>You need to be signed in to complete checkout.</p>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginTop: 16 }}>
+              <button onClick={() => { setShowLoginModal(false); navigate('/auth'); }} style={{ background: '#ff66a3', color: 'white', border: 'none', padding: '10px 14px', borderRadius: 8, cursor: 'pointer' }}>Login</button>
+              <button onClick={() => setShowLoginModal(false)} style={{ background: 'transparent', border: '1px solid #ff8fb1', color: '#d63384', padding: '10px 14px', borderRadius: 8, cursor: 'pointer' }}>Cancel</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

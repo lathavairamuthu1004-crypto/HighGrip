@@ -4,6 +4,24 @@
     padding: 30px 20px;
 }
 
+/* Login Modal Overlay */
+.login-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.login-modal {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
 .checkout-container {
     max-width: 1200px;
     margin: 0 auto;

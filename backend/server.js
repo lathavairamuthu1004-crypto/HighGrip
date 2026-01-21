@@ -134,10 +134,13 @@ const messageSchema = new mongoose.Schema({
 const supportSchema = new mongoose.Schema({
   userEmail: String,
   userName: String,
-  subject: String, // First message snippet
-  messages: [messageSchema],
-  lastUpdated: { type: Date, default: Date.now },
+  message: String,
+  image: String,
+  reply: String,
+  replyAt: Date,
+  createdAt: { type: Date, default: Date.now },
 });
+
 const Support = mongoose.model("Support", supportSchema);
 
 /* ================= IMAGE UPLOAD ================= */

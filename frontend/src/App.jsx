@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { WishlistProvider } from "./context/WishlistContext";
 import { CartProvider } from "./context/CartContext";
+import FloatingChat from "./components/FloatingChat";
 
 import CategoryProducts from "./pages/CategoryProducts";
 import EditProductPage from "./admin/EditProductPage";
@@ -22,17 +23,20 @@ import OrdersPage from "./pages/OrdersPage"; // ✅ Import Orders Page
 import CustomerService from "./pages/CustomerService"; // ✅ Import Customer Service Page
 import Profile from "./pages/Profile";
 import AboutPage from "./pages/AboutPage";
+import Contact from "./pages/Contact";
 function App() {
   return (
     <WishlistProvider>
       <CartProvider>
         <Router>
+          <FloatingChat />
           <Routes>
             {/* Home Route - First page user sees */}
             <Route path="/" element={<HomePage />} /> {/* Default to Home */}
             <Route path="/auth" element={<AuthPage />} /> {/* Auth page */}
             <Route path="/admin/edit-product/:id" element={<EditProductPage />} />
 
+            <Route path="/contact" element={<Contact />} /> {/* Contact Page */}
             {/* Shop Routes */}
             <Route path="/home" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
