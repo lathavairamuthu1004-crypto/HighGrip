@@ -118,7 +118,7 @@ const AuthPage = () => {
         >
           <motion.div variants={itemVariants} className="brand-logo-container">
             <div className="brand-icon" style={{ background: "none", boxShadow: "none" }}>
-              <img src="/highgrip_logo.png" alt="HIGHGRIP Shoes" style={{ width: "100%", borderRadius: "14px" }} />
+              <img src="/logoo.png" alt="HIGHGRIP Shoes" style={{ width: "100%", borderRadius: "14px" }} />
             </div>
             <h1 className="brand-name" style={{ color: "#e53935" }}>
               HIGHGRIP SHOES

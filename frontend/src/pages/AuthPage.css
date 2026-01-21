@@ -1,6 +1,6 @@
 :root {
   --primary-color: #ff4081; /* Bright Pink Accent */
-  --primary-hover: #e91e63; /* Darker Pink for hover */
+  --primary-hover: #c71585; /* Darker Pink for hover */
   --text-dark: #1f2937;     /* Dark text */
   --text-gray: #6b7280;     /* Gray text */
   --bg-light: #f9fafb;      /* Light background */
@@ -31,8 +31,8 @@
   align-items: center;
   gap: 8px;
   background: #ffffff;
-  color: #e91e63;
-  border: 2px solid #e91e63;
+  color: #c71585;
+  border: 2px solid #c71585;
   padding: 10px 16px;
   border-radius: 8px;
   cursor: pointer;
@@ -42,7 +42,7 @@
 }
 
 .back-btn-auth:hover {
-  background: #e91e63;
+  background: #c71585;
   color: #fff;
   transform: translateX(-4px);
 }
@@ -74,7 +74,7 @@
 .stat-item h3 {
   font-size: 1.8rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #406dff, #e91e63);
+  background: linear-gradient(135deg, #406dff, #c71585);
  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin: 0 0 5px 0;
@@ -98,7 +98,7 @@
 .brand-name {
   font-size: 2rem;
   font-weight: 800;
-   background: linear-gradient(135deg, #406dff, #e91e63);
+   background: linear-gradient(135deg, #c71585,#406dff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin: 0;
@@ -116,7 +116,7 @@
 
 .highlight-text {
   /* Gradient pink effect for Premium Footwear */
-  background: linear-gradient(135deg, #ff4081, #e91e63);
+  background: linear-gradient(135deg, #ff4081, #c71585);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -220,7 +220,7 @@
 .input-icon {
   position: absolute;
   left: 15px;
-  color: #ff4081;
+  color:  #c71585;
   font-size: 1.1rem;
 }
 
@@ -298,7 +298,7 @@
   padding: 10px;
   border: none;
   background: var(--white);       /* Inactive background */
-  color:#e91e63;   /* Inactive text = pink */
+  color: #c71585;   /* Inactive text = pink */
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
@@ -307,14 +307,14 @@
 }
 
 .auth-tab.active {
-  background: #e91e63; /* Active background = pink */
+  background:  #c71585; /* Active background = pink */
   color: var(--white);              /* Active text = white */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .auth-tab:hover {
   background: rgba(211, 13, 79, 0.1); /* light pink on hover */
-  color: #e91e63;
+  color:  #c71585;
 }
 
 .submit-btn {
