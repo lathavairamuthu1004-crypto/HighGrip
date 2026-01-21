@@ -19,6 +19,28 @@ mongoose
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
 
+/* ================= IMAGE UPLOAD ================= */
+const storage = multer.diskStorage({
+  destination: "uploads/",
+  filename: (req, file, cb) =>
+    cb(null, Date.now() + path.extname(file.originalname)),
+});
+const upload = multer({ storage });
+
+/* ================= AUTH ================= */
+const verifyAdmin = (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ message: "No token" });
+    const decoded = jwt.verify(token, "SECRET_KEY");
+    if (!decoded.isAdmin) return res.status(403).json({ message: "Admin only" });
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};
+
 /* ================= SCHEMAS ================= */
 
 // USER
@@ -124,13 +146,27 @@ const Review = mongoose.model("Review", reviewSchema);
 
 // CUSTOMER SUPPORT
 // CUSTOMER SUPPORT CHAT
-const messageSchema = new mongoose.Schema({
-  sender: { type: String, enum: ["user", "admin"] },
-  text: String,
+/* ================= SUPPORT CHAT ================= */
+
+// NEW CHAT SCHEMA (Conversation-based)
+const chatMessageSchema = new mongoose.Schema({
+  sender: { type: String, enum: ["user", "admin"], required: true },
+  text: { type: String, required: true },
   image: String,
   timestamp: { type: Date, default: Date.now },
 });
 
+const chatSchema = new mongoose.Schema({
+  userEmail: { type: String, required: true },
+  userName: { type: String, required: true },
+  subject: String,
+  messages: [chatMessageSchema],
+  lastUpdated: { type: Date, default: Date.now },
+});
+
+const Chat = mongoose.model("Chat", chatSchema);
+
+// KEEPING LEGACY SUPPORT SCHEMA (Unused by new routes, preserving for safety)
 const supportSchema = new mongoose.Schema({
   userEmail: String,
   userName: String,
@@ -140,93 +176,142 @@ const supportSchema = new mongoose.Schema({
   replyAt: Date,
   createdAt: { type: Date, default: Date.now },
 });
-
 const Support = mongoose.model("Support", supportSchema);
 
-/* ================= IMAGE UPLOAD ================= */
-const storage = multer.diskStorage({
-  destination: "uploads/",
-  filename: (req, file, cb) =>
-    cb(null, Date.now() + path.extname(file.originalname)),
-});
-const upload = multer({ storage });
 
-/* ================= AUTH ================= */
-const verifyAdmin = (req, res, next) => {
-  try {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) return res.status(401).json({ message: "No token" });
-    const decoded = jwt.verify(token, "SECRET_KEY");
-    if (!decoded.isAdmin) return res.status(403).json({ message: "Admin only" });
-    req.user = decoded;
-    next();
-  } catch (err) {
-    return res.status(401).json({ message: "Invalid token" });
-  }
-};
-
-// ... (Existing Login/Signup routes remain unchanged) ...
-
-/* ================= SUPPORT CHAT ================= */
-
-// START NEW CHAT (USER)
-app.post("/support/start", upload.single("image"), async (req, res) => {
+// START/SEND MESSAGE (USER)
+app.post("/support", upload.single("image"), async (req, res) => {
   try {
     const { userEmail, userName, message } = req.body;
-    const initialMessage = {
+
+    // Find existing chat for this user
+    let chat = await Chat.findOne({ userEmail });
+
+    const newMessage = {
       sender: "user",
       text: message,
       image: req.file ? `/uploads/${req.file.filename}` : "",
+      timestamp: new Date()
     };
 
-    const support = await Support.create({
-      userEmail,
-      userName,
-      subject: message.substring(0, 50) + (message.length > 50 ? "..." : ""),
-      messages: [initialMessage],
-    });
-    res.json(support);
+    if (chat) {
+      chat.messages.push(newMessage);
+      chat.lastUpdated = new Date();
+      await chat.save();
+    } else {
+      chat = await Chat.create({
+        userEmail,
+        userName,
+        subject: message.substring(0, 50) + (message.length > 50 ? "..." : ""),
+        messages: [newMessage],
+        lastUpdated: new Date()
+      });
+    }
+
+    // Return the specific added message or the whole chat? 
+    // FloatingChat expects { message: "...", chat: ... }
+    res.json({ message: "Message sent", chat });
+  } catch (err) {
+    console.error("Chat Error:", err);
+    res.status(500).json({ message: "Failed to send message" });
+  }
+});
+
+// COMPATIBILITY ROUTE (Some frontend versions might call /start)
+app.post("/support/start", upload.single("image"), async (req, res) => {
+  // Redirect logic to the main handler
+  try {
+    const { userEmail, userName, message } = req.body;
+    let chat = await Chat.findOne({ userEmail });
+    const newMessage = {
+      sender: "user",
+      text: message,
+      image: req.file ? `/uploads/${req.file.filename}` : "",
+      timestamp: new Date()
+    };
+    if (chat) {
+      chat.messages.push(newMessage);
+      chat.lastUpdated = new Date();
+      await chat.save();
+    } else {
+      chat = await Chat.create({
+        userEmail,
+        userName,
+        subject: message.substring(0, 50) + (message.length > 50 ? "..." : ""),
+        messages: [newMessage],
+        lastUpdated: new Date()
+      });
+    }
+    res.json(chat);
   } catch (err) {
     res.status(500).json({ message: "Failed to start chat" });
   }
 });
 
-// GET USER CHATS
+// GET USER CHAT HISTORY
+app.get("/support/history/:email", async (req, res) => {
+  try {
+    const chat = await Chat.findOne({ userEmail: req.params.email });
+    // Return array of messages
+    res.json(chat ? chat.messages : []);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch history" });
+  }
+});
+
+// GET USER CHATS (Wait, old route was /support/user/:email returning array of chats?)
+// If we want one chat per user (conversation style), we just return [chat] or the chat itself.
+// The frontend calls /support/history mostly.
 app.get("/support/user/:email", async (req, res) => {
   try {
-    const chats = await Support.find({ userEmail: req.params.email }).sort({ lastUpdated: -1 });
-    res.json(chats);
+    const chat = await Chat.findOne({ userEmail: req.params.email });
+    res.json(chat ? [chat] : []);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch chats" });
   }
 });
 
 // GET ALL CHATS (ADMIN)
-app.get("/support/admin", verifyAdmin, async (req, res) => {
+app.get("/admin/support", verifyAdmin, async (req, res) => {
   try {
-    const chats = await Support.find().sort({ lastUpdated: -1 });
+    const chats = await Chat.find().sort({ lastUpdated: -1 });
     res.json(chats);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch chats" });
   }
 });
 
-// SEND MESSAGE (BOTH USER & ADMIN)
-app.put("/support/:id/message", upload.single("image"), async (req, res) => {
+// GET ALL CHATS (ADMIN) - Alt route
+app.get("/support/admin", verifyAdmin, async (req, res) => {
   try {
-    const { sender, text } = req.body; // sender: 'user' or 'admin'
+    const chats = await Chat.find().sort({ lastUpdated: -1 });
+    res.json(chats);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch chats" });
+  }
+});
+
+// ADMIN REPLY / SEND MESSAGE
+app.put("/support/:id/message", verifyAdmin, upload.single("image"), async (req, res) => {
+  try {
+    const { sender, text } = req.body;
     const newMessage = {
-      sender,
+      sender: sender || "admin",
       text,
       image: req.file ? `/uploads/${req.file.filename}` : "",
+      timestamp: new Date()
     };
 
-    await Support.findByIdAndUpdate(req.params.id, {
-      $push: { messages: newMessage },
-      lastUpdated: new Date(),
-    });
+    const chat = await Chat.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: { messages: newMessage },
+        lastUpdated: new Date()
+      },
+      { new: true }
+    );
 
-    res.json(newMessage);
+    res.json(chat);
   } catch (err) {
     res.status(500).json({ message: "Failed to send message" });
   }
@@ -235,7 +320,7 @@ app.put("/support/:id/message", upload.single("image"), async (req, res) => {
 // DELETE CHAT (ADMIN)
 app.delete("/admin/support/:id", verifyAdmin, async (req, res) => {
   try {
-    await Support.findByIdAndDelete(req.params.id);
+    await Chat.findByIdAndDelete(req.params.id);
     res.json({ message: "Chat deleted" });
   } catch (err) {
     res.status(500).json({ message: "Failed to delete chat" });

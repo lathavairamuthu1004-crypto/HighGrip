@@ -28,10 +28,9 @@ const FloatingChat = () => {
           if (Array.isArray(data)) {
             const formattedMessages = data.map((msg, idx) => ({
               id: msg._id || idx,
-              text: msg.message,
-              sender: msg.userName === user.name ? "user" : "admin",
-              reply: msg.reply || null,
-              timestamp: new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              text: msg.text, // Mapped from Chat schema 'text'
+              sender: msg.sender,
+              timestamp: new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             }));
             setMessages(formattedMessages);
             // Scroll to bottom after loading
@@ -44,7 +43,7 @@ const FloatingChat = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    
+
     if (!user) {
       alert("Please login to send a message");
       return;
@@ -63,8 +62,7 @@ const FloatingChat = () => {
       id: Date.now(),
       text: messageText,
       sender: "user",
-      reply: null,
-      timestamp: new Date().toLocaleTimeString()
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
     setMessages(prev => [...prev, userMessage]);
 
@@ -124,18 +122,12 @@ const FloatingChat = () => {
               </div>
             ) : (
               <>
-                {messages.map((msg) => (
-                  <div key={msg.id} className={`chat-message ${msg.sender}`}>
+                {messages.map((msg, idx) => (
+                  <div key={msg.id || idx} className={`chat-message ${msg.sender}`}>
                     <div className="message-content">
                       <p>{msg.text}</p>
                       <span className="message-time">{msg.timestamp}</span>
                     </div>
-                    {msg.reply && (
-                      <div className="message-reply">
-                        <strong>Admin Reply:</strong>
-                        <p>{msg.reply}</p>
-                      </div>
-                    )}
                   </div>
                 ))}
                 <div ref={messagesEndRef} />
