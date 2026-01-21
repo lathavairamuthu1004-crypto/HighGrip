@@ -4,16 +4,25 @@ import { createContext, useContext, useState, useEffect } from "react";
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+    return JSON.parse(localStorage.getItem("cart")) || [];
+  });
+
   const user = JSON.parse(localStorage.getItem("user"));
   const userEmail = user?.email;
 
+  // Persistence to localStorage
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
+  // Initial fetch from backend if user is logged in
   useEffect(() => {
     if (userEmail) {
       fetch(`http://localhost:5000/cart/${userEmail}`)
         .then(res => res.json())
         .then(data => {
-          if (Array.isArray(data)) {
+          if (Array.isArray(data) && data.length > 0) {
             setCart(data);
           }
         })
@@ -63,7 +72,7 @@ export const CartProvider = ({ children }) => {
             price: product.price,
             img: product.image || product.img,
             qty: 1,
-            variation: product.size 
+            variation: product.size
           })
         });
       } catch (err) {

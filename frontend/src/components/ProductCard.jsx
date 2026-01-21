@@ -35,16 +35,16 @@ const ProductCard = ({ product }) => {
   };
   const now = new Date();
 
-const discountActive =
-  product.discountPercent > 0 &&
-  product.discountStart &&
-  product.discountEnd &&
-  now >= new Date(product.discountStart) &&
-  now <= new Date(product.discountEnd);
+  const discountActive =
+    product.discountPercent > 0 &&
+    product.discountStart &&
+    product.discountEnd &&
+    now >= new Date(product.discountStart) &&
+    now <= new Date(product.discountEnd);
 
-const discountedPrice = discountActive
-  ? Math.round(product.price - (product.price * product.discountPercent) / 100)
-  : product.price;
+  const discountedPrice = discountActive
+    ? Math.round(product.price - (product.price * product.discountPercent) / 100)
+    : product.price;
 
 
   return (
@@ -52,10 +52,6 @@ const discountedPrice = discountActive
       <div className="image-box">
         <button className={`wishlist-btn ${isWishlisted ? "liked" : ""}`} onClick={toggleWishlist} title="Add to wishlist">
           <FaHeart />
-        </button>
-
-        <button className="cart-overlay-btn" onClick={handleAddToCart} title="Add to cart">
-          <FaShoppingCart />
         </button>
 
         <img src={`http://localhost:5000${product.image}`} alt={product.name} />
@@ -71,25 +67,28 @@ const discountedPrice = discountActive
       </div>
 
       <div className="card-info">
-        <h4>{product.name}</h4>
-        <div className="rating-container" style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '5px' }}>
-          <div className="stars" style={{ color: '#fbbf24', display: 'flex' }}>
+        <h4 className="product-title">{product.name}</h4>
+        <div className="rating-container">
+          <div className="stars">
             {[...Array(5)].map((_, i) => (
               <FaStar key={i} size={14} color={i < Math.round(product.averageRating || 0) ? "#fbbf24" : "#e5e7eb"} />
             ))}
           </div>
-          <span style={{ fontSize: '0.8rem', color: '#666' }}>({product.ratingCount || 0})</span>
+          <span className="rating-count">({product.ratingCount || 0})</span>
         </div>
         <div className="price-box">
-  {discountActive ? (
-    <>
-      <span className="original-price">₹{product.price}</span>
-      <span className="discounted-price">₹{discountedPrice}</span>
-    </>
-  ) : (
-    <span className="normal-price">₹{product.price} </span>
-  )}
-</div>
+          {discountActive ? (
+            <>
+              <span className="discounted-price">₹{discountedPrice}</span>
+              <span className="original-price">₹{product.price}</span>
+            </>
+          ) : (
+            <span className="normal-price">₹{product.price} </span>
+          )}
+        </div>
+        <button className="add-cart-btn" onClick={handleAddToCart}>
+          <FaShoppingCart /> Add to Cart
+        </button>
       </div>
     </div>
   );

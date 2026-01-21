@@ -42,52 +42,51 @@ const Hero = () => {
   const slide = slides[index];
 
   return (
-    <section className="editorial-hero">
-      {/* The Dynamic Color Background for wordings */}
-      <div className="hero-color-base"></div>
-      
-      <div className="hero-inner" key={slide.id}>
-        {/* Large Aesthetic Watermark */}
-        <div className="hero-watermark">{slide.bgWord}</div>
-
-        <div className="hero-main-grid">
-          {/* 1. Wordings Section (Pink Background via CSS) */}
-          <div className="hero-text-container">
-            <div className="text-content">
-              
-              <h1 className="hero-title">
-                {slide.title} <br />
-                <span className="title-outline">{slide.highlight}</span>
-              </h1>
-              <p className="hero-description">{slide.desc}</p>
-              
-              <button className="hero-cta-button">
-                Shop Collection 
-              </button>
-            </div>
-          </div>
-
-          {/* 2. Visual Section (White Background via CSS) */}
-          <div className="hero-visual-container">
-            <div className="image-wrapper">
-              <img src={slide.img} alt={slide.title} className="product-image" />
-              
-              {/* Floating Info Badge */}
-              
-            </div>
+    <section className="professional-hero">
+      <div className="hero-grid container">
+        {/* Left Content */}
+        <div className="hero-content">
+          <div className="hero-badge">New Arrivals 2026</div>
+          <h1 className="hero-main-title">
+            Discover Your <br />
+            <span className="highlight-text">Premium Collection</span>
+          </h1>
+          <p className="hero-subline">
+            Explore premium products with exclusive deals and fast delivery.
+            Quality guaranteed for your daily lifestyle.
+          </p>
+          <div className="hero-button-group">
+            <button className="hero-btn-primary">
+              Shop Now <FaArrowRight />
+            </button>
+            <button className="hero-btn-secondary">
+              View Deals
+            </button>
           </div>
         </div>
 
-        {/* Minimalist Navigation */}
-        <div className="hero-pagination">
-          {slides.map((_, i) => (
-            <div 
-              key={i} 
-              className={`pagination-line ${i === index ? "active" : ""}`}
-              onClick={() => setIndex(i)}
-            />
-          ))}
+        {/* Right Visual */}
+        <div className="hero-visual">
+          <div className="organic-shape">
+            <img src="/assets/grounded.png" alt="Featured Product" className="main-hero-img" />
+
+            {/* Floating Info Card */}
+            <div className="floating-info-card">
+              <div className="info-content">
+                <strong>Quality Guaranteed</strong>
+                <p>100% Premium</p>
+              </div>
+              <button className="mini-shop-btn">Shop</button>
+            </div>
+          </div>
         </div>
+      </div>
+
+      {/* Hero Pagination (Simplified for now) */}
+      <div className="hero-simple-pagination">
+        <span className="dot active"></span>
+        <span className="dot"></span>
+        <span className="dot"></span>
       </div>
     </section>
   );

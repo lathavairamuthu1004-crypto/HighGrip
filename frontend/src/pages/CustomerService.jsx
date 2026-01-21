@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { FaCloudUploadAlt, FaTimes, FaArrowLeft, FaPaperPlane, FaPlus } from "react-icons/fa";
+import { FaCloudUploadAlt, FaTimes, FaArrowLeft, FaPaperPlane, FaPlus, FaChevronDown, FaChevronUp, FaHeadset } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
 import "./CustomerService.css";
 
 const CustomerService = () => {
@@ -9,6 +10,8 @@ const CustomerService = () => {
     const [newMessage, setNewMessage] = useState("");
     const [image, setImage] = useState(null);
     const [preview, setPreview] = useState(null);
+    const [activeFaq, setActiveFaq] = useState(null);
+    const [view, setView] = useState("faq"); // "faq" or "chat"
 
     // New Chat State
     const [showNewChatForm, setShowNewChatForm] = useState(false);
@@ -16,6 +19,37 @@ const CustomerService = () => {
 
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+    const faqs = [
+        {
+            q: "What makes Highgrip socks non-skid?",
+            a: "Our socks feature specially designed rubber grips on the sole that provide excellent traction on smooth surfaces, helping prevent slips and falls."
+        },
+        {
+            q: "Who can wear Highgrip socks?",
+            a: "Highgrip socks are designed for everyone! From toddlers taking their first steps to seniors looking for extra stability, our socks offer comfort and safety for all ages."
+        },
+        {
+            q: "Are Highgrip socks machine washable?",
+            a: "Yes, they are! We recommend washing them in cold water on a gentle cycle and air drying to maintain the integrity of the rubber grips."
+        },
+        {
+            q: "Do you offer different sizes?",
+            a: "Absolutely. We offer a wide range of sizes for babies, kids, and adults. Please check our size chart for the perfect fit."
+        },
+        {
+            q: "What are the rubber grips made of?",
+            a: "The grips are made from high-quality, non-toxic silicone that is durable and provides long-lasting traction."
+        },
+        {
+            q: "Are your socks suitable for hospital or medical use?",
+            a: "Yes, many customers use our socks in hospitals or for medical recovery because of their superior grip and comfort."
+        },
+        {
+            q: "Do you have socks for babies or toddlers?",
+            a: "Yes, we have a specific collection for little ones with extra-soft fabric and full-sole grip for safety."
+        }
+    ];
 
     useEffect(() => {
         if (user.email) fetchChats();
@@ -33,6 +67,11 @@ const CustomerService = () => {
 
     const handleStartChat = async (e) => {
         e.preventDefault();
+        if (!user.email) {
+            alert("Please login to start a chat");
+            navigate("/auth");
+            return;
+        }
         const formData = new FormData();
         formData.append("userEmail", user.email);
         formData.append("userName", user.name);
@@ -40,7 +79,7 @@ const CustomerService = () => {
         if (image) formData.append("image", image);
 
         try {
-            await fetch("http://localhost:5000/support/start", {
+            await fetch("http://localhost:5000/support", {
                 method: "POST",
                 body: formData
             });
@@ -71,13 +110,8 @@ const CustomerService = () => {
             setNewMessage("");
             setImage(null);
             setPreview(null);
-            fetchChats(); // Refresh to see new message
-            // Ideally we'd just push to local state but this is safer for now
-            const updatedChat = { ...activeChat };
-            // We'll let the fetchChats handle updating the full list, 
-            // but we need to update activeChat to show immediate feedback if possible
-            // Re-fetching specific chat or just list is fine.
-            // Let's just re-fetch lists and find the active chat again.
+
+            // Fetch updated chat data
             const res = await fetch(`http://localhost:5000/support/user/${user.email}`);
             const data = await res.json();
             setChats(data);
@@ -96,122 +130,172 @@ const CustomerService = () => {
         }
     };
 
+    const toggleFaq = (index) => {
+        setActiveFaq(activeFaq === index ? null : index);
+    };
+
     return (
-        <div className="customer-service-page chat-mode">
-            <button className="back-btn" onClick={() => navigate("/home")}>
-                <FaArrowLeft /> Back
-            </button>
+        <div className="customer-service-container">
+            <Header />
 
-            <div className="chat-container">
-                {/* SIDEBAR: CHAT LIST */}
-                <div className={`chat-sidebar ${activeChat ? 'mobile-hidden' : ''}`}>
-                    <div className="sidebar-header">
-                        <h2>Support Chats</h2>
-                        <button className="new-chat-btn" onClick={() => setShowNewChatForm(true)}>
-                            <FaPlus /> New
-                        </button>
-                    </div>
-
-                    <div className="chat-list">
-                        {chats.map(chat => (
-                            <div
-                                key={chat._id}
-                                className={`chat-item ${activeChat?._id === chat._id ? 'active' : ''}`}
-                                onClick={() => setActiveChat(chat)}
-                            >
-                                <div className="chat-avatar">🎧</div>
-                                <div className="chat-info">
-                                    <h4>{chat.subject}</h4>
-                                    <p>{new Date(chat.lastUpdated).toLocaleDateString()}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+            <main className="cs-main container">
+                {/* View Toggles */}
+                <div className="view-toggles">
+                    <button
+                        className={`toggle-btn ${view === "faq" ? "active" : ""}`}
+                        onClick={() => setView("faq")}
+                    >
+                        Frequently Asked Questions
+                    </button>
+                    <button
+                        className={`toggle-btn ${view === "chat" ? "active" : ""}`}
+                        onClick={() => setView("chat")}
+                    >
+                        <FaHeadset /> Chat with Support
+                    </button>
                 </div>
 
-                {/* MAIN AREA */}
-                <div className={`chat-window ${!activeChat && !showNewChatForm ? 'empty' : ''} ${!activeChat && showNewChatForm ? 'mobile-hidden' : ''}`}>
-
-                    {/* 1. EMPTY STATE */}
-                    {!activeChat && !showNewChatForm && (
-                        <div className="no-chat-selected">
-                            <h3>Select a chat or start a new one</h3>
+                {view === "faq" ? (
+                    <section className="faq-section">
+                        <div className="faq-header">
+                            <h1>How can we help you?</h1>
+                            <p>Browse through our most common questions or start a chat with our team.</p>
                         </div>
-                    )}
-
-                    {/* 2. NEW CHAT FORM */}
-                    {showNewChatForm && (
-                        <div className="new-chat-form-container">
-                            <h3>Start a New Support Chat</h3>
-                            <form onSubmit={handleStartChat}>
-                                <textarea
-                                    placeholder="How can we help you?"
-                                    value={startMessage}
-                                    onChange={e => setStartMessage(e.target.value)}
-                                    required
-                                />
-                                <div className="form-actions">
-                                    <label className="icon-btn">
-                                        <FaCloudUploadAlt />
-                                        <input type="file" hidden onChange={handleImageChange} />
-                                    </label>
-                                    <button type="submit">Start Chat</button>
-                                </div>
-                                {preview && <img src={preview} className="preview-thumb" alt="upload" />}
-                            </form>
-                            <button className="cancel-btn" onClick={() => setShowNewChatForm(false)}>Cancel</button>
-                        </div>
-                    )}
-
-                    {/* 3. ACTIVE CHAT */}
-                    {activeChat && (
-                        <>
-                            <div className="chat-header">
-                                <button className="mobile-back" onClick={() => setActiveChat(null)}>
-                                    <FaArrowLeft />
-                                </button>
-                                <h3>{activeChat.subject}</h3>
-                            </div>
-
-                            <div className="messages-area">
-                                {activeChat.messages.map((msg, idx) => (
-                                    <div key={idx} className={`message-bubble ${msg.sender}`}>
-                                        <div className="message-content">
-                                            {msg.text}
-                                            {msg.image && <img src={`http://localhost:5000${msg.image}`} alt="attachment" />}
-                                        </div>
-                                        <span className="message-time">
-                                            {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                        </span>
+                        <div className="faq-list">
+                            {faqs.map((faq, index) => (
+                                <div key={index} className={`faq-item ${activeFaq === index ? "open" : ""}`}>
+                                    <div className="faq-question" onClick={() => toggleFaq(index)}>
+                                        <h3>{faq.q}</h3>
+                                        {activeFaq === index ? <FaChevronUp /> : <FaChevronDown />}
                                     </div>
-                                ))}
+                                    <div className="faq-answer">
+                                        <p>{faq.a}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                ) : (
+                    <section className="chat-interface">
+                        <div className="chat-inner-container">
+                            {/* SIDEBAR: CHAT LIST */}
+                            <div className={`cs-chat-sidebar ${activeChat ? 'mobile-hidden' : ''}`}>
+                                <div className="sidebar-header">
+                                    <h2>Support History</h2>
+                                    <button className="new-chat-btn" onClick={() => setShowNewChatForm(true)}>
+                                        <FaPlus /> New Chat
+                                    </button>
+                                </div>
+
+                                <div className="cs-chat-list">
+                                    {chats.length === 0 ? (
+                                        <p className="no-chats">No previous chats found.</p>
+                                    ) : (
+                                        chats.map(chat => (
+                                            <div
+                                                key={chat._id}
+                                                className={`cs-chat-item ${activeChat?._id === chat._id ? 'active' : ''}`}
+                                                onClick={() => setActiveChat(chat)}
+                                            >
+                                                <div className="chat-avatar">🎧</div>
+                                                <div className="chat-info">
+                                                    <h4>{chat.subject}</h4>
+                                                    <p>{new Date(chat.lastUpdated).toLocaleDateString()}</p>
+                                                </div>
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
                             </div>
 
-                            <form className="chat-input-area" onSubmit={handleSendMessage}>
-                                <label className="attach-btn">
-                                    <FaCloudUploadAlt />
-                                    <input type="file" hidden onChange={handleImageChange} />
-                                </label>
-                                <input
-                                    type="text"
-                                    placeholder="Type a message..."
-                                    value={newMessage}
-                                    onChange={e => setNewMessage(e.target.value)}
-                                />
-                                <button type="submit" className="send-btn">
-                                    <FaPaperPlane />
-                                </button>
-                            </form>
-                            {preview && (
-                                <div className="input-preview">
-                                    <img src={preview} alt="preview" />
-                                    <FaTimes onClick={() => { setImage(null); setPreview(null) }} />
-                                </div>
-                            )}
-                        </>
-                    )}
-                </div>
-            </div>
+                            {/* MAIN AREA */}
+                            <div className={`cs-chat-window ${!activeChat && !showNewChatForm ? 'empty' : ''} ${!activeChat && showNewChatForm ? 'mobile-hidden' : ''}`}>
+
+                                {/* 1. EMPTY STATE */}
+                                {!activeChat && !showNewChatForm && (
+                                    <div className="no-chat-selected">
+                                        <FaHeadset size={40} />
+                                        <h3>Select a conversation or start a new one</h3>
+                                        <p>Our team is ready to assist you with any questions.</p>
+                                    </div>
+                                )}
+
+                                {/* 2. NEW CHAT FORM */}
+                                {showNewChatForm && (
+                                    <div className="new-chat-form-container">
+                                        <h3>Tell us what you need</h3>
+                                        <form onSubmit={handleStartChat}>
+                                            <textarea
+                                                placeholder="Describe your issue or question here..."
+                                                value={startMessage}
+                                                onChange={e => setStartMessage(e.target.value)}
+                                                required
+                                            />
+                                            <div className="form-actions">
+                                                <label className="icon-btn">
+                                                    <FaCloudUploadAlt />
+                                                    <input type="file" hidden onChange={handleImageChange} />
+                                                </label>
+                                                <button type="submit" className="start-btn">Start Conversation</button>
+                                            </div>
+                                            {preview && <img src={preview} className="preview-thumb" alt="upload" />}
+                                        </form>
+                                        <button className="cancel-btn" onClick={() => setShowNewChatForm(false)}>Go Back</button>
+                                    </div>
+                                )}
+
+                                {/* 3. ACTIVE CHAT */}
+                                {activeChat && (
+                                    <>
+                                        <div className="chat-header">
+                                            <button className="mobile-back" onClick={() => setActiveChat(null)}>
+                                                <FaArrowLeft />
+                                            </button>
+                                            <h3>{activeChat.subject}</h3>
+                                        </div>
+
+                                        <div className="messages-area">
+                                            {activeChat.messages.map((msg, idx) => (
+                                                <div key={idx} className={`message-bubble ${msg.sender}`}>
+                                                    <div className="message-content">
+                                                        {msg.text}
+                                                        {msg.image && <img src={`http://localhost:5000${msg.image}`} alt="attachment" />}
+                                                    </div>
+                                                    <span className="message-time">
+                                                        {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <form className="chat-input-area" onSubmit={handleSendMessage}>
+                                            <label className="attach-btn">
+                                                <FaCloudUploadAlt />
+                                                <input type="file" hidden onChange={handleImageChange} />
+                                            </label>
+                                            <input
+                                                type="text"
+                                                placeholder="Type your message..."
+                                                value={newMessage}
+                                                onChange={e => setNewMessage(e.target.value)}
+                                            />
+                                            <button type="submit" className="send-btn">
+                                                <FaPaperPlane />
+                                            </button>
+                                        </form>
+                                        {preview && (
+                                            <div className="input-preview">
+                                                <img src={preview} alt="preview" />
+                                                <FaTimes onClick={() => { setImage(null); setPreview(null) }} />
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </section>
+                )}
+            </main>
         </div>
     );
 };
