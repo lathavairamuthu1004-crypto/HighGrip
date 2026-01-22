@@ -1,175 +1,140 @@
-
-import Header from "../components/Header";
-import FlashSaleBar from "../components/FlashSaleBar";
-import Hero from "../components/Hero";
-import ProductCard from "../components/ProductCard";
-import CategoryCard from "../components/CategoryCard";
-import { FaStar } from "react-icons/fa";
+import React from "react";
 import "./HomePage.css";
-import React, { useState, useEffect } from "react";
+import "../components/Header";
 
-const HomePage = () => {
-  const [priceRange, setPriceRange] = useState(2000);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [minRating, setMinRating] = useState(0);
-
-
-  const handleCategoryChange = (category) => {
-    setSelectedCategories(prev => {
-      if (prev.includes(category)) {
-        return prev.filter(c => c !== category);
-      } else {
-        return [...prev, category];
-      }
-    });
-  };
-
-  // Filter products based on selected categories (OR logic), search term, price, and rating
-  const filteredProducts = products.filter(product => {
-    const matchesCategory =
-      selectedCategories.length === 0 ||
-      selectedCategories.includes(product.category);
-
-    const matchesSearch =
-      (product.name || "").toLowerCase().includes(searchTerm.toLowerCase());
-
-    const productPrice = Number(product.price);
-    const matchesPrice = isNaN(productPrice) || productPrice <= priceRange;
-
-    const matchesRating = (Number(product.averageRating) || 0) >= minRating;
-
-    return matchesCategory && matchesSearch && matchesPrice && matchesRating;
-  });
-
-  useEffect(() => {
-    fetch("http://localhost:5000/products")
-      .then(res => res.json())
-      .then(data => setProducts(data))
-      .catch(err => console.error("Failed to fetch products", err));
-
-    fetch("http://localhost:5000/categories")
-      .then(res => res.json())
-      .then(data => setCategories(data))
-      .catch(err => console.error("Failed to fetch categories", err));
-  }, []);
-
-  const clearFilters = () => {
-    setSelectedCategories([]);
-    setPriceRange(2000);
-    setMinRating(0);
-    setSearchTerm("");
-  };
-
+export default function Home() {
   return (
-    <div className="homepage">
-      <Header onSearch={setSearchTerm} />
-      <Hero />
-      <FlashSaleBar />
+    <div className="home">
 
-      <div className="home-container container">
-        {/* Filters Sidebar */}
-        <aside className="filters-sidebar">
-          <div className="filter-group">
-            <h3>Filters</h3>
-            <div className="filter-section">
-              <h4>Categories</h4>
-              {categories.map((cat) => (
-                <label key={cat._id} className="filter-checkbox">
-                  <input
-                    type="checkbox"
-                    checked={selectedCategories.includes(cat.name)}
-                    onChange={() => handleCategoryChange(cat.name)}
-                  />
-                  <span>{cat.name}</span>
-                </label>
-              ))}
+      {/* HERO */}
+      <section className="hero">
+        <div className="hero-left">
+          <h1>
+            SAFETY,<br />
+            REDEFINED.
+          </h1>
+          <p>
+            Experience the next generation of grip technology.
+            Engineered for athletes, designed for life.
+          </p>
+          <button className="primary-btn">Shop Collection</button>
+
+          <div className="hero-stats">
+            <div>
+              <h3>10K+</h3>
+              <span>Happy Athletes</span>
             </div>
-
-            <div className="filter-section">
-              <h4>Price Range</h4>
-              <input
-                type="range"
-                min="0"
-                max="2000"
-                value={priceRange}
-                onChange={(e) => setPriceRange(Number(e.target.value))}
-                className="price-slider"
-              />
-              <div className="price-labels">
-                <span>₹0</span>
-                <span>₹{priceRange}</span>
-                <span>₹2000</span>
-              </div>
-            </div>
-
-            <div className="filter-section">
-              <h4>Minimum Rating</h4>
-              <div className="rating-filter">
-                {[5, 4, 3, 2, 1].map((rating) => (
-                  <label key={rating} className="filter-checkbox">
-                    <input
-                      type="radio"
-                      name="rating"
-                      checked={minRating === rating}
-                      onChange={() => setMinRating(rating)}
-                    />
-                    <span className="stars-row">
-                      {[...Array(5)].map((_, i) => (
-                        <FaStar
-                          key={i}
-                          size={14}
-                          color={i < rating ? "#fbbf24" : "#e5e7eb"}
-                        />
-                      ))}
-                      <span className="up-text">& UP</span>
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <button className="clear-filter-btn" onClick={clearFilters}>
-              Clear All Filters
-            </button>
-          </div>
-        </aside>
-
-        {/* Main Products Area */}
-        <main className="main-content">
-          <div className="content-header">
-            <div className="header-info">
-              <h2>All Products</h2>
-              <span className="result-count">{filteredProducts.length} products found</span>
-            </div>
-            <div className="sort-box">
-              <select defaultValue="featured">
-                <option value="featured">Featured</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Top Rated</option>
-              </select>
+            <div>
+              <h3>99.8%</h3>
+              <span>Satisfaction Rate</span>
             </div>
           </div>
+        </div>
 
-          <div className="products-grid">
-            {filteredProducts.map((product) => (
-              <ProductCard key={product._id} product={product} />
-            ))}
+        <div className="hero-right">
+          <img src="/images/hero.png" alt="Hero Shoe" />
+          <div className="iso-badge">
+            Medical Grade <br />
+            <strong>ISO CERTIFIED</strong>
           </div>
+        </div>
+      </section>
 
-          {filteredProducts.length === 0 && (
-            <div className="no-results">
-              <p>No products match your current filters.</p>
-              <button onClick={clearFilters}>Reset All Filters</button>
+      {/* COLLECTION */}
+      <section className="collection">
+        <h2>EXPLORE COLLECTION</h2>
+        <p>Seven innovative categories designed for maximum performance</p>
+
+        <div className="collection-grid">
+          <div className="big-card">
+            <img src="/images/yoga.png" alt="Yoga Socks" />
+            <span>Yoga Socks</span>
+          </div>
+          <div className="small-card">
+            <img src="/images/compression.png" alt="Compression Socks" />
+            <span>Compression</span>
+          </div>
+          <div className="small-card">
+            <img src="/images/thigh.png" alt="Thigh High Socks" />
+            <span>Thigh High</span>
+          </div>
+        </div>
+      </section>
+
+      {/* PRODUCTS */}
+      <section className="products">
+        {[
+          { img: "p1.png", score: "97/100", price: "$44.99", title: "Medical Recovery Socks" },
+          { img: "p2.png", score: "94/100", price: "$27.99", title: "Trampoline Fitness Socks" },
+          { img: "p3.png", score: "90/100", price: "$19.99", title: "Classic Grip Socks" },
+        ].map((item, i) => (
+          <div className="product-card" key={i}>
+            <span className="score">{item.score}</span>
+            <img src={`/images/${item.img}`} alt={item.title} />
+            <h4>{item.title}</h4>
+            <h3>{item.price}</h3>
+            <p>Premium grip technology with medical-grade silicone.</p>
+            <button>View Details</button>
+          </div>
+        ))}
+      </section>
+
+      {/* GRIP TECH */}
+      <section className="grip">
+        <h2>GRIP-TECH™</h2>
+        <p>Revolutionary grip engineered for peak performance</p>
+
+        <div className="grip-content">
+          <img src="/images/chip.png" alt="Grip Chip" />
+          <div>
+            <div className="grip-box">
+              <h4>Medical Grade Silicone</h4>
+              <p>FDA-approved compound ensures superior traction.</p>
             </div>
-          )}
-        </main>
-      </div>
+            <div className="grip-box">
+              <h4>Grip Lock Pattern</h4>
+              <p>Hexagonal pattern delivers 3× more grip.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="proof">
+        <h2>PROFESSIONAL PROOF</h2>
+        <div className="proof-grid">
+          <div className="proof-card">“Transformed my training completely.”</div>
+          <div className="proof-card">“Doctor recommended – excellent quality.”</div>
+          <div className="proof-card">“Perfect for yoga and workouts.”</div>
+        </div>
+      </section>
+
+      {/* STATS */}
+      <section className="stats">
+        <div>
+          <h2>500+</h2>
+          <span>Athletes</span>
+        </div>
+        <div>
+          <h2>50K+</h2>
+          <span>Sold</span>
+        </div>
+        <div>
+          <h2>4.9★</h2>
+          <span>Rating</span>
+        </div>
+        <div>
+          <h2>98%</h2>
+          <span>Recommend</span>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="footer">
+        <h3>HIGHGRIP</h3>
+        <p>Redefining safety through innovative grip technology.</p>
+      </footer>
+
     </div>
   );
-};
-
-export default HomePage;
+}
