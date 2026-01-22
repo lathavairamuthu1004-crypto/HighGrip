@@ -276,7 +276,7 @@
   justify-content: center;
   gap: 10px;
 
-  background: linear-gradient(135deg, #16a34a, #22c55e);
+  background: #c71585;
   color: #ffffff;
 
   padding: 14px 24px;
@@ -295,7 +295,7 @@
 .buy-now-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 15px 30px rgba(34, 197, 94, 0.35);
-  background: linear-gradient(135deg, #15803d, #16a34a);
+  background: #700B4B;
 }
 
 /* Active (click) */
@@ -405,7 +405,7 @@
 
 .submit-review-btn {
   width: 100%;
-  background: #2f3542;
+  background: #c71585;
   color: white;
   border: none;
   padding: 12px;
@@ -416,7 +416,7 @@
 }
 
 .submit-review-btn:hover {
-  background: #1e2124;
+  background: #700B4B;
 }
 
 .submit-review-btn:disabled {

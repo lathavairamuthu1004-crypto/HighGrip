@@ -1,31 +1,30 @@
-import React, { useEffect, useState, useRef } from "react";
-import { FaArrowRight } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
 import "./hero.css";
 
 const slides = [
   {
     id: "01",
-    title: "Stay Grounded. ",
-    highlight: "Move Freely",
-    desc: "Engineered with revolutionary non-slip technology, Highgrip keeps you firmly in place during every movement.",
+    tag: "MEDICAL GRADE STABILITY",
+    title: "MAXIMUM",
+    highlight: "TRACTION",
+    desc: "Engineered with revolutionary non-slip technology for high-intensity athletes and patient recovery stages.",
     img: "/assets/grounded.png",
-    bgWord: "GRIP"
   },
   {
     id: "02",
-    title: "Baby Comfort.",
-    highlight: "Safe Steps",
-    desc: "Maximum protection for crawling stages. Safety meets style for your little ones' first adventures.",
+    tag: "PEDIATRIC SAFETY TECH",
+    title: "SENSORY",
+    highlight: "COMFORT",
+    desc: "The gold standard in pediatric stability. Maximum traction for crawling and early development stages.",
     img: "/assets/kneeprotect.png",
-    bgWord: "SAFE"
   },
   {
-    id: "03", // Unique ID ensures the 3rd slide triggers
-    title: "Ankle Grip.",
-    highlight: "Daily Power",
-    desc: "The signature range: where performance and daily comfort meet seamlessly in a classic design.",
+    id: "03",
+    tag: "ELITE PERFORMANCE",
+    title: "DYNAMIC",
+    highlight: "POWER",
+    desc: "Our signature compression-knit design with 360° silicone node technology for all-day confidence.",
     img: "/assets/anklegrip.png",
-    bgWord: "ELITE"
   }
 ];
 
@@ -42,52 +41,57 @@ const Hero = () => {
   const slide = slides[index];
 
   return (
-    <section className="editorial-hero">
-      {/* The Dynamic Color Background for wordings */}
-      <div className="hero-color-base"></div>
-      
-      <div className="hero-inner" key={slide.id}>
-        {/* Large Aesthetic Watermark */}
-        <div className="hero-watermark">{slide.bgWord}</div>
+    <section className="unified-hero">
+      {/* Ghost text background fills the gap between text and image */}
+      <div className="bg-watermark">{slide.highlight}</div>
 
-        <div className="hero-main-grid">
-          {/* 1. Wordings Section (Pink Background via CSS) */}
-          <div className="hero-text-container">
-            <div className="text-content">
+      <div className="hero-grid" key={index}>
+        
+        {/* Left Side: Typography */}
+        <div className="text-canvas">
+          <div className="stagger-container">
+            <span className="premium-tag">{slide.tag}</span>
+            
+            <h1 className="hero-title">
+              <span className="block-text">{slide.title}</span>
+              <span className="outline-text">{slide.highlight}</span>
+            </h1>
+            
+            <p className="hero-description">{slide.desc}</p>
+            
+            <div className="hero-footer">
+              <button className="cta-primary">Explore Collection</button>
               
-              <h1 className="hero-title">
-                {slide.title} <br />
-                <span className="title-outline">{slide.highlight}</span>
-              </h1>
-              <p className="hero-description">{slide.desc}</p>
-              
-              <button className="hero-cta-button">
-                Shop Collection 
-              </button>
-            </div>
-          </div>
-
-          {/* 2. Visual Section (White Background via CSS) */}
-          <div className="hero-visual-container">
-            <div className="image-wrapper">
-              <img src={slide.img} alt={slide.title} className="product-image" />
-              
-              {/* Floating Info Badge */}
-              
+              <div className="step-indicator">
+                <span className="active-idx">0{index + 1}</span>
+                <div className="progress-line">
+                  <div className="progress-fill"></div>
+                </div>
+                <span className="total-idx">0{slides.length}</span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Minimalist Navigation */}
-        <div className="hero-pagination">
-          {slides.map((_, i) => (
-            <div 
-              key={i} 
-              className={`pagination-line ${i === index ? "active" : ""}`}
-              onClick={() => setIndex(i)}
-            />
-          ))}
+        {/* Right Side: Medical/Sport Hexagon Mask */}
+        <div className="visual-canvas">
+          <div className="medical-shaper">
+            <div className="image-mask">
+               <img src={slide.img} alt={slide.title} className="hero-main-img" />
+            </div>
+          </div>
+          
+          <div className="side-dots">
+            {slides.map((_, i) => (
+              <div 
+                key={i} 
+                className={`dot-item ${i === index ? "active" : ""}`}
+                onClick={() => setIndex(i)}
+              />
+            ))}
+          </div>
         </div>
+
       </div>
     </section>
   );

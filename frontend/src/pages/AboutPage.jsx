@@ -15,12 +15,11 @@ const AboutPage = () => {
     <div className="innovative-about">
       <Header />
       
-      {/* 1. ASYMMETRIC HERO */}
       <section className="hero-split">
         <div className="hero-left">
           <div className="reveal-box">
             <span className="tagline">The Highgrip Ethos</span>
-            <h1 className="split-h1">Safety, <br/><span className="outline">Redefined.</span></h1>
+            <h1 className="split-h1">SAFETY, <br/><span className="outline">REDEFINED.</span></h1>
             <p className="hero-para">
               We don't just make socks. We engineer stability for the modern mover. 
               A worldwide fusion of performance tech and aesthetic luxury.
@@ -40,7 +39,6 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* 2. INFINITE MARQUEE */}
       <div className="brand-marquee">
         <div className="marquee-content">
           <span>HIGH-TRACTION</span>
@@ -57,7 +55,6 @@ const AboutPage = () => {
         </div>
       </div>
 
-      {/* 3. INNOVATIVE GRID */}
       <section className="vision-container">
         <div className="vision-layout">
           <div className="vision-card">
@@ -84,11 +81,10 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* 4. REFINED DEPTH SECTION (Why Us) */}
       <section className="depth-section">
         <div className="depth-content">
           <div className="depth-text">
-            <h2 className="depth-title">Why move with us?</h2>
+            <h2 className="depth-title">WHY MOVE WITH US?</h2>
             <p className="depth-intro">
               Because your safety and comfort shouldn’t be compromised. Highgrip socks are designed to give 
               you unbeatable traction, all-day comfort, and versatile style—no matter where life takes you.
@@ -119,14 +115,12 @@ const AboutPage = () => {
           </div>
           
           <div className="depth-image-box">
-            <img src="/about.png" alt="Yoga Performance" className="depth-img" />
-           
-            <div className="floating-badge">Verified Grip</div>
+            <img src="/highgrip.png" alt="Yoga Performance" className="depth-img" />
+            
           </div>
         </div>
       </section>
 
-      {/* 5. MINIMALIST QUOTE AREA */}
       <section className="closing-statement">
         <div className="statement-inner">
           <p className="quote-text">"Movement is a right, stability is a necessity."</p>
