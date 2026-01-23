@@ -1,30 +1,36 @@
 import React, { useState, useEffect } from "react";
-import "./hero.css";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import "./Hero.css";
+
+// Assets
+import hero1 from "../assets/hero1.png";
+import hero2 from "../assets/hero2.png";
+import hero3 from "../assets/hero3.png";
 
 const slides = [
   {
-    id: "001",
-    tag: "Performance Engineering",
-    title: "ULTIMATE",
-    highlight: "STABILITY",
-    desc: "Engineered for high-intensity movement with medical-grade silicone traction.",
-    img: "/assets/grounded.png", // Replace with your actual path
+    id: "01",
+    tag: "PRO PERFORMANCE",
+    title: "Enjoy the Ultimate",
+    highlight: "Studio Experience",
+    desc: "Redefining balance and stability with medical-grade biometric traction technology.",
+    img: hero1,
   },
   {
-    id: "002",
-    tag: "Pediatric Innovation",
-    title: "GENTLE",
-    highlight: "PROTECTION",
-    desc: "The safest grip technology for the world's smallest explorers.",
-    img: "/assets/kneeprotect.png",
+    id: "02",
+    tag: "PEDIATRIC SAFETY",
+    title: "Safe Adventures for",
+    highlight: "Little Feet",
+    desc: "The world's most trusted non-slip technology for growing explorers.",
+    img: hero2,
   },
   {
-    id: "003",
-    tag: "Luxury Aesthetics",
-    title: "DYNAMIC",
-    highlight: "FLOW",
-    desc: "360-degree node distribution meets premium compression knit fabric.",
-    img: "/assets/anklegrip.png",
+    id: "03",
+    tag: "STABILITY+",
+    title: "Confident Steps with",
+    highlight: "Medical Precision",
+    desc: "Engineered for rehabilitation and daily safety in every movement.",
+    img: hero3,
   }
 ];
 
@@ -34,60 +40,62 @@ const Hero = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % slides.length);
-    }, 6000);
+    }, 8000);
     return () => clearInterval(timer);
   }, []);
 
   const slide = slides[index];
 
+  const handleNext = () => setIndex((prev) => (prev + 1) % slides.length);
+  const handlePrev = () => setIndex((prev) => (prev - 1 + slides.length) % slides.length);
+
+  const scrollToShop = () => {
+    const shopSection = document.getElementById("shop-section");
+    if (shopSection) {
+      shopSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <div className="hero-page-wrapper">
-      {/* 1. SEPARATED HEADER SPACER */}
-      <div className="header-offset"></div>
-
-      <section className="modern-hero-section">
-        <div className="hero-container" key={index}>
-          
-          {/* 2. THE CONTENT CARD (Glassmorphism) */}
-          <div className="content-card">
-            <div className="brand-overlay"></div>
-            <div className="card-inner">
-              <span className="modern-tag">{slide.tag}</span>
-              <h1 className="modern-title">
-                {slide.title} <br />
-                <span className="weight-900">{slide.highlight}</span>
+    <section className="full-hero-carousel">
+      {slides.map((s, i) => (
+        <div
+          key={s.id}
+          className={`hero-slide ${i === index ? "active" : ""}`}
+          style={{ backgroundImage: `url(${s.img})` }}
+        >
+          <div className="hero-overlay">
+            <div className="hero-content container">
+              <span className="hero-badge">{s.tag}</span>
+              <h1 className="hero-title">
+                {s.title} <br />
+                <span className="hero-highlight">{s.highlight}</span>
               </h1>
-              <p className="modern-desc">{slide.desc}</p>
-              <button className="modern-cta">SHOP COLLECTIONS</button>
-
-              {/* 3. INTEGRATED THUMBNAILS (Reflecting the Canva Style) */}
-              <div className="modern-thumbnails">
-                {slides.map((s, i) => (
-                  <div 
-                    key={s.id} 
-                    className={`thumb-node ${i === index ? "active" : ""}`}
-                    onClick={() => setIndex(i)}
-                  >
-                    <img src={s.img} alt="nav" />
-                    <span className="thumb-label">{s.id}</span>
-                  </div>
-                ))}
-              </div>
+              <p className="hero-desc">{s.desc}</p>
+              <button className="shop-btn" onClick={scrollToShop}>
+                SHOP COLLECTION
+              </button>
             </div>
           </div>
-
-          {/* 4. THE PRODUCT STAGE (Realistic Depth) */}
-          <div className="visual-stage">
-            <div className="stage-bg"></div>
-            <div className="image-wrapper">
-              <img src={slide.img} alt={slide.title} className="hero-product-img" />
-              <div className="realistic-shadow"></div>
-            </div>
-          </div>
-
         </div>
-      </section>
-    </div>
+      ))}
+
+      {/* Navigation Controls */}
+      <div className="carousel-nav">
+        <button className="nav-arrow prev" onClick={handlePrev}><FaChevronLeft /></button>
+        <button className="nav-arrow next" onClick={handleNext}><FaChevronRight /></button>
+      </div>
+
+      <div className="carousel-dots">
+        {slides.map((_, i) => (
+          <span
+            key={i}
+            className={`dot ${i === index ? "active" : ""}`}
+            onClick={() => setIndex(i)}
+          ></span>
+        ))}
+      </div>
+    </section>
   );
 };
 

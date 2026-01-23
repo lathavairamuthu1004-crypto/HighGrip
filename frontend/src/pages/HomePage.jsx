@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaQuoteRight, FaStar, FaHeartbeat, FaRunning, FaArrowRight } from 'react-icons/fa';
 import Header from "../components/Header";
 import SidebarFilters from "../components/SidebarFilters";
-import Hero from "../components/Hero"; 
+import Hero from "../components/Hero";
 import CollectionGrid from "../components/CollectionGrid";
 import ProductCard from "../components/ProductCard";
 import "./HomePage.css";
@@ -98,7 +98,7 @@ export default function Home() {
       <CollectionGrid />
 
       {/* Main Shop Section */}
-      <div className="shop-layout container" style={{ display: 'flex', gap: '40px', padding: '40px 20px', maxWidth: '1440px', margin: '0 auto' }}>
+      <div id="shop-section" className="shop-layout container" style={{ display: 'flex', gap: '40px', padding: '40px 20px', maxWidth: '1440px', margin: '0 auto' }}>
         <SidebarFilters filters={filters} onFilterChange={handleFilterChange} />
 
         <div className="shop-main" style={{ flex: 1 }}>
@@ -131,7 +131,7 @@ export default function Home() {
       {/* --- MOTION REVIEW SECTION --- */}
       <section className="motion-review-section">
         <div className="bg-glow"></div>
-        
+
         <div className="section-intro">
           <span className="premium-tag">Performance Validation</span>
           <h2 className="motion-title">Standard of <span className="italic-magenta">Excellence</span></h2>
@@ -170,7 +170,7 @@ export default function Home() {
       </section>
 
       {/* --- FOOTER --- */}
-     
+
       <footer className="footer-site">
         <div className="footer-container">
           <div className="footer-column brand-col">
