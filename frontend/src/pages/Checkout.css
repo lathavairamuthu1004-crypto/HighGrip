@@ -212,8 +212,8 @@
     width: 100%;
     padding: 16px;
     background: white;
-    border: 2px solid #10b981;
-    color: #10b981;
+    border: 2px solid #c2188b;
+    color: #c2188b;
     border-radius: 14px;
     font-weight: 700;
     cursor: pointer;
@@ -221,7 +221,7 @@
 }
 
 .preview-slip-btn:hover:not(:disabled) {
-    background: #f0fdf4;
+    background: #fdf2f8;
 }
 
 .preview-slip-btn:disabled {
@@ -308,8 +308,8 @@
 }
 
 .method-price.free {
-    color: #10b981;
-    /* Green color for FREE */
+    color: #c2188b;
+    /* Pink color for FREE */
 }
 
 /* Payment Icons */
@@ -332,7 +332,7 @@
 }
 
 .free {
-    color: #10b981;
+    color: #c2188b;
     font-weight: 700;
 }
 
@@ -433,7 +433,7 @@
         width: calc(100% - 40px);
         z-index: 50;
         margin-top: 0;
-        box-shadow: 0 4px 20px rgba(46, 125, 50, 0.4);
+        box-shadow: 0 4px 20px rgba(194, 24, 139, 0.4);
         padding: 16px;
     }
 

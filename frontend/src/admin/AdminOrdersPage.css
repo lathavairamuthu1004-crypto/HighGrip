@@ -211,7 +211,8 @@
 }
 
 .status-select.delivered {
-  background: #dcfce7;
+  background: #fdf2f8;
+  color: #c2188b;
 }
 
 .status-select.cancelled {
@@ -458,7 +459,7 @@
 .price-row.total {
   font-weight: 700;
   font-size: 16px;
-  color: #10b981;
+  color: #c2188b;
   margin-top: 10px;
 }
 

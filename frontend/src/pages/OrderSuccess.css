@@ -16,7 +16,7 @@
 }
 
 .main-check-icon {
-    color: #10b981;
+    color: #c2188b;
     margin-bottom: 20px;
 }
 
@@ -74,7 +74,7 @@
 }
 
 .main-check-icon {
-    color: #10b981;
+    color: #c2188b;
     /* Apply the animation */
     animation: success-bounce 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
 }
@@ -132,7 +132,7 @@
     position: absolute;
     width: 80px;
     height: 80px;
-    background-color: rgba(16, 185, 129, 0.2);
+    background-color: rgba(194, 24, 139, 0.2);
     border-radius: 50%;
     animation: pulse-ring 1.5s ease-out infinite;
 }

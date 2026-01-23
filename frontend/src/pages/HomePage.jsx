@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import ProductCard from "../components/ProductCard";
 import SidebarFilters from "../components/SidebarFilters";
 import Hero from "../components/Hero"; // The new Hero
+import CollectionGrid from "../components/CollectionGrid";
 import "./HomePage.css";
 
 export default function Home() {
@@ -67,13 +68,15 @@ export default function Home() {
       {/* Hero segregated here */}
       <Hero />
 
+      {/* New Bento Collection Grid */}
+      <CollectionGrid />
+
       {/* Main Shop Section with Sidebar - Grid logic untouched */}
-      <div className="shop-layout container" style={{ display: 'flex', gap: '40px', padding: '100px 20px' }}>
+      <div className="shop-layout container" style={{ display: 'flex', gap: '40px', padding: '40px 20px' }}>
         <SidebarFilters filters={filters} onFilterChange={handleFilterChange} />
 
         <div className="shop-main" style={{ flex: 1 }}>
           <section className="collection-compact" style={{ marginBottom: '40px' }}>
-            <h2 style={{ fontFamily: 'Syncopate, sans-serif', fontSize: '1.2rem', letterSpacing: '4px' }}>EXPLORE COLLECTION</h2>
             <p style={{ color: '#64748b' }}>{filteredProducts.length} items found</p>
           </section>
 

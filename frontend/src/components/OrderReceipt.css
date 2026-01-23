@@ -46,13 +46,13 @@
 }
 
 .receipt-header-actions .print-btn {
-  background: #10b981;
+  background: #c2188b;
   color: white;
-  border-color: #10b981;
+  border-color: #c2188b;
 }
 
 .receipt-header-actions .print-btn:hover {
-  background: #059669;
+  background: #9d1371;
 }
 
 .receipt-header-actions .close-btn {
@@ -74,7 +74,7 @@
 }
 
 .receipt-brand h1 {
-  color: #10b981;
+  color: #c2188b;
   font-size: 24px;
   margin: 0;
 }
@@ -144,7 +144,7 @@
 .summary-line.total {
   font-weight: 700;
   font-size: 18px;
-  color: #10b981;
+  color: #c2188b;
   margin-top: 8px;
 }
 
@@ -160,20 +160,20 @@
   .no-print {
     display: none !important;
   }
-  
+
   .receipt-overlay {
     background: white !important;
     position: relative !important;
     backdrop-filter: none !important;
   }
-  
+
   .receipt-modal {
     width: 100% !important;
     box-shadow: none !important;
     max-height: none !important;
     border-radius: 0 !important;
   }
-  
+
   .receipt-content {
     padding: 0 !important;
   }

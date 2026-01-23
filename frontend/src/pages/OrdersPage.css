@@ -86,9 +86,9 @@
 }
 
 .date-info.delivered {
-    background: #f0fdf4;
-    color: #16a34a;
-    border: 1px solid #dcfce7;
+    background: #fdf2f8;
+    color: #c2188b;
+    border: 1px solid #fce7f3;
 }
 
 .order-meta {
@@ -125,9 +125,9 @@
 }
 
 .status-delivered {
-    background: #f0fdf4;
-    color: #15803d;
-    border: 1px solid #dcfce7;
+    background: #fdf2f8;
+    color: #c2188b;
+    border: 1px solid #fce7f3;
 }
 
 .status-cancelled {
@@ -236,7 +236,7 @@
 }
 
 .submit-btn {
-    background: #10b981;
+    background: #c2188b;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -247,7 +247,7 @@
 }
 
 .submit-btn:hover {
-    background: #059669;
+    background: #9d1371;
 }
 
 .cancel-btn {
@@ -363,17 +363,17 @@
 }
 
 .step.completed .step-circle {
-    background: #10b981;
+    background: #c2188b;
     color: white;
-    border-color: #10b981;
+    border-color: #c2188b;
 }
 
 .step.completed .step-label {
-    color: #10b981;
+    color: #c2188b;
 }
 
 .step.completed .step-line {
-    background: #10b981;
+    background: #c2188b;
 }
 
 /* Actions & Buttons */
@@ -408,9 +408,9 @@
 }
 
 .demo-btn.deliver {
-    background: #f0fdf4;
-    color: #15803d;
-    border-color: #dcfce7;
+    background: #fdf2f8;
+    color: #c2188b;
+    border-color: #fce7f3;
 }
 
 .demo-btn:hover {

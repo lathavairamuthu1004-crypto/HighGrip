@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import { FaStar, FaShoppingCart, FaArrowLeft } from "react-icons/fa";
+import { FaStar, FaShoppingCart, FaArrowLeft, FaCloud, FaExpand, FaPalette, FaBolt, FaHeartbeat } from "react-icons/fa";
+import { MdSecurity, MdAir, MdCompress, MdLocalLaundryService, MdCheckCircle } from "react-icons/md";
 
 import { useCart } from "../context/CartContext";
 import "./ProductDetailPage.css";
@@ -45,6 +46,7 @@ const ProductDetailPage = () => {
   const [newComment, setNewComment] = useState("");
   const [uploadImages, setUploadImages] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showFeatures, setShowFeatures] = useState(true);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -162,6 +164,22 @@ const ProductDetailPage = () => {
     ? (product.price * (1 - product.discountPercent / 100)).toFixed(2)
     : product.price;
 
+  const getFeatureIcon = (feature) => {
+    const text = feature.toLowerCase();
+    if (text.includes("anti-slip") || text.includes("grip") || text.includes("no slip")) return <MdSecurity style={{ color: '#c71585' }} />;
+    if (text.includes("cushioned") || text.includes("soft")) return <FaCloud style={{ color: '#c71585' }} />;
+    if (text.includes("breathable") || text.includes("mesh") || text.includes("no sweat")) return <MdAir style={{ color: '#c71585' }} />;
+    if (text.includes("stretchable") || text.includes("fit") || text.includes("stretch") || text.includes("no slide")) return <FaExpand style={{ color: '#c71585' }} />;
+    if (text.includes("compression") || text.includes("circulation")) return <MdCompress style={{ color: '#c71585' }} />;
+    if (text.includes("color") || text.includes("pastel") || text.includes("design") || text.includes("stylish") || text.includes("sophistication") || text.includes("classic") || text.includes("comfort")) return <FaPalette style={{ color: '#c71585' }} />;
+    if (text.includes("wash") || text.includes("dry")) return <MdLocalLaundryService style={{ color: '#c71585' }} />;
+    if (text.includes("performance") || text.includes("sports") || text.includes("fitness") || text.includes("active") || text.includes("play") || text.includes("unisex") || text.includes("travel")) return <FaBolt style={{ color: '#c71585' }} />;
+    if (text.includes("recovery") || text.includes("fatigue") || text.includes("swelling") || text.includes("soreness")) return <FaHeartbeat style={{ color: '#c71585' }} />;
+    if (text.includes("sweat") || text.includes("wicking")) return <MdLocalLaundryService style={{ color: '#c71585' }} />;
+    if (text.includes("logo") || text.includes("text") || text.includes("merchandise")) return <MdCheckCircle style={{ color: '#c71585' }} />;
+    return <MdCheckCircle style={{ color: '#c71585' }} />;
+  };
+
   return (
     <div className="product-detail-page">
       <Header />
@@ -194,19 +212,7 @@ const ProductDetailPage = () => {
           </div>
 
           <div className="product-info-section">
-            <span className="detail-tag">{product.tag || "New"}</span>
             <h1 className="detail-title">{product.name}</h1>
-            <div className="detail-rating">
-              <div className="stars">
-                {[...Array(5)].map((_, i) => (
-                  <FaStar
-                    key={i}
-                    className={i < Math.round(product.averageRating || 0) ? "star-filled" : "star-empty"}
-                  />
-                ))}
-              </div>
-              <span className="reviews">({product.ratingCount || 0} ratings)</span>
-            </div>
             <div className="detail-price">
               {isDiscountActive ? (
                 <>
@@ -220,16 +226,33 @@ const ProductDetailPage = () => {
                 <span className="price">₹{product.price}</span>
               )}
             </div>
-            <p className="detail-description">
-              {product.description || `Elevate your style with this premium quality ${product.name.toLowerCase()}.`}
-            </p>
+
+            <p className="detail-description" dangerouslySetInnerHTML={{
+              __html: product.description || `Elevate your style with this premium quality ${product.name.toLowerCase()}.`
+            }} />
+
+            <div className="detail-rating" style={{ marginBottom: '20px' }}>
+              <div className="stars">
+                {[...Array(5)].map((_, i) => (
+                  <FaStar
+                    key={i}
+                    className={i < Math.round(product.averageRating || 0) ? "star-filled" : "star-empty"}
+                  />
+                ))}
+              </div>
+              <span className="reviews">({product.ratingCount || 0} ratings)</span>
+              {product.tag && <span className="detail-tag" style={{ marginLeft: '15px' }}>{product.tag}</span>}
+            </div>
             <div className="selection-group">
-              <h4>Select Size</h4>
+              <div className="size-header">
+                <h4>Available Sizes</h4>
+                <span className="selected-size-label">{selectedSize === 'S' ? 'Small' : selectedSize === 'M' ? 'Medium' : selectedSize === 'L' ? 'Large' : 'Extra Large'}</span>
+              </div>
               <div className="size-options">
                 {sizes.map((size) => (
                   <button
                     key={size}
-                    className={`size-btn ${selectedSize === size ? "active" : ""}`}
+                    className={`size-btn circle-btn ${selectedSize === size ? "active" : ""}`}
                     onClick={() => setSelectedSize(size)}
                   >
                     {size}
@@ -237,6 +260,27 @@ const ProductDetailPage = () => {
                 ))}
               </div>
             </div>
+
+            {product.features && product.features.length > 0 && (
+              <div className="features-accordion">
+                <div className="accordion-header" onClick={() => setShowFeatures(!showFeatures)}>
+                  <h4>Key Features</h4>
+                  <span className={`toggle-icon ${showFeatures ? 'open' : ''}`}>
+                    {showFeatures ? <span style={{ fontSize: '1.5rem' }}>−</span> : <span style={{ fontSize: '1.5rem' }}>+</span>}
+                  </span>
+                </div>
+                {showFeatures && (
+                  <ul className="features-list">
+                    {product.features.map((feature, index) => (
+                      <li key={index} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span className="feature-icon">{getFeatureIcon(feature)}</span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
             <div className="selection-group">
               <h4>Quantity</h4>
               <div className="quantity-control">

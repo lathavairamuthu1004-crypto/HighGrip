@@ -119,7 +119,7 @@ const OrderSuccess = () => {
               style={{
                 width: '100%',
                 padding: '12px',
-                background: '#6366f1',
+                background: '#c2188b',
                 color: 'white',
                 border: 'none',
                 borderRadius: '8px',
@@ -137,9 +137,9 @@ const OrderSuccess = () => {
             {hasRated && (
               <div style={{ textAlign: 'center', animation: 'fadeIn 0.5s' }}>
                 <div className="check-container">
-                  <CheckCircle size={80} className="main-check-icon" style={{ color: '#10b981' }} />
+                  <CheckCircle size={80} className="main-check-icon" style={{ color: '#c2188b' }} />
                 </div>
-                <h2 style={{ color: '#10b981', marginBottom: '10px' }}>All set!</h2>
+                <h2 style={{ color: '#c2188b', marginBottom: '10px' }}>All set!</h2>
                 <p style={{ color: '#6b7280', marginBottom: '30px' }}>Thanks for your rating.</p>
               </div>
             )}

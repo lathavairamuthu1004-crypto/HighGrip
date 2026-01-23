@@ -71,7 +71,7 @@ const ProductCard = ({ product }) => {
         <div className="rating-container">
           <div className="stars">
             {[...Array(5)].map((_, i) => (
-              <FaStar key={i} size={14} color={i < Math.round(product.averageRating || 0) ? "#fbbf24" : "#e5e7eb"} />
+              <FaStar key={i} size={14} color={i < Math.round(product.averageRating || 0) ? "#FFD700" : "#e5e7eb"} />
             ))}
           </div>
           <span className="rating-count">({product.ratingCount || 0})</span>

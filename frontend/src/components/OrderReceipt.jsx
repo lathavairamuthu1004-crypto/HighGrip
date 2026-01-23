@@ -23,7 +23,7 @@ const OrderReceipt = ({ order, items, onClose }) => {
 
                 <div className="receipt-content" id="printable-receipt">
                     <div className="receipt-brand">
-                        <h1>Herbal E-com</h1>
+                        <h1>Highgrip</h1>
                         <p>Order Payment Slip</p>
                     </div>
 
