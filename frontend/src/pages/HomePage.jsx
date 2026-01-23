@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { FaQuoteRight, FaStar, FaHeartbeat, FaRunning, FaArrowRight } from 'react-icons/fa';
 import Header from "../components/Header";
-import ProductCard from "../components/ProductCard";
 import SidebarFilters from "../components/SidebarFilters";
-import Hero from "../components/Hero"; // The new Hero
+import Hero from "../components/Hero"; 
 import CollectionGrid from "../components/CollectionGrid";
+import ProductCard from "../components/ProductCard";
 import "./HomePage.css";
 
 export default function Home() {
@@ -20,7 +21,36 @@ export default function Home() {
     payOnDelivery: false
   });
 
-  // --- Logic remains untouched ---
+  const reviews = [
+    {
+      id: 1,
+      category: "Medical Trust",
+      icon: <FaHeartbeat />,
+      name: "Dr. Sarah Chen",
+      role: "Physical Therapist",
+      text: "The stability these socks provide for my elderly patients is unmatched. The biometric grip lock reduces slip risks significantly during recovery.",
+      rating: 5
+    },
+    {
+      id: 2,
+      category: "Elite Sport",
+      icon: <FaRunning />,
+      name: "Marcus Thorne",
+      role: "Pro Yoga Instructor",
+      text: "Zero-slip performance even during the most intense transitions. The thermal breathability keeps my feet dry and grounded.",
+      rating: 5
+    },
+    {
+      id: 3,
+      category: "Medical Trust",
+      icon: <FaHeartbeat />,
+      name: "James Wilson",
+      role: "Post-Op Recovery",
+      text: "After my knee surgery, these were a lifesaver. I felt secure walking on tiled floors at home without the fear of sliding.",
+      rating: 5
+    }
+  ];
+
   useEffect(() => {
     fetch("http://localhost:5000/products")
       .then((res) => res.json())
@@ -64,20 +94,16 @@ export default function Home() {
   return (
     <div className="home">
       <Header onSearch={handleSearch} />
-
-      {/* Hero segregated here */}
       <Hero />
-
-      {/* New Bento Collection Grid */}
       <CollectionGrid />
 
-      {/* Main Shop Section with Sidebar - Grid logic untouched */}
-      <div className="shop-layout container" style={{ display: 'flex', gap: '40px', padding: '40px 20px' }}>
+      {/* Main Shop Section */}
+      <div className="shop-layout container" style={{ display: 'flex', gap: '40px', padding: '40px 20px', maxWidth: '1440px', margin: '0 auto' }}>
         <SidebarFilters filters={filters} onFilterChange={handleFilterChange} />
 
         <div className="shop-main" style={{ flex: 1 }}>
           <section className="collection-compact" style={{ marginBottom: '40px' }}>
-            <p style={{ color: '#64748b' }}>{filteredProducts.length} items found</p>
+            <p style={{ color: '#64748b', fontWeight: '600' }}>{filteredProducts.length} items found</p>
           </section>
 
           <section className="products-grid-container">
@@ -102,9 +128,95 @@ export default function Home() {
         </div>
       </div>
 
-      <footer className="footer-modern" style={{ background: '#1a1a1a', color: 'white', padding: '60px', textAlign: 'center' }}>
-        <h3 style={{ fontFamily: 'Syncopate', letterSpacing: '10px' }}>HIGHGRIP</h3>
-        <p>© 2026 Highgrip Safety Tech. All Rights Reserved.</p>
+      {/* --- MOTION REVIEW SECTION --- */}
+      <section className="motion-review-section">
+        <div className="bg-glow"></div>
+        
+        <div className="section-intro">
+          <span className="premium-tag">Performance Validation</span>
+          <h2 className="motion-title">Standard of <span className="italic-magenta">Excellence</span></h2>
+        </div>
+
+        <div className="motion-grid">
+          {reviews.map((rev) => (
+            <div className="parallax-card" key={rev.id}>
+              <div className="card-inner-layer">
+                <div className="card-top">
+                  <div className="status-badge">
+                    <span className="pulse-dot"></span>
+                    {rev.category}
+                  </div>
+                  <div className="rev-icon-floating">{rev.icon}</div>
+                </div>
+
+                <div className="testimonial-text-box">
+                  <FaQuoteRight className="quote-watermark" />
+                  <p className="testimonial-para">"{rev.text}"</p>
+                </div>
+
+                <div className="card-footer-info">
+                  <div className="user-details">
+                    <h4 className="user-name-inter">{rev.name}</h4>
+                    <p className="user-role-magenta">{rev.role}</p>
+                  </div>
+                  <div className="rating-stars-gold">
+                    {[...Array(rev.rating)].map((_, i) => <FaStar key={i} />)}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* --- FOOTER --- */}
+     
+      <footer className="footer-site">
+        <div className="footer-container">
+          <div className="footer-column brand-col">
+            <h4 className="footer-col-title">HIGHGRIP</h4>
+            <p className="footer-address">
+              Lakshmi Textile, Shed no 9,<br />
+              SIDCO colony, Madurai main road,<br />
+              Theni, Tamil Nadu, 625531
+            </p>
+          </div>
+
+          <div className="footer-column">
+            <h4 className="footer-col-title">QUICK LINKS</h4>
+            <ul className="footer-links">
+              <li><a href="/">Home</a></li>
+              <li><a href="/about">About Us</a></li>
+              <li><a href="/products">Our Products</a></li>
+              <li><a href="/customer-service">FAQ</a></li>
+              <li><a href="/contact">Contact Us</a></li>
+            </ul>
+          </div>
+
+          <div className="footer-column">
+            <h4 className="footer-col-title">PRODUCTS</h4>
+            <ul className="footer-links">
+              <li><a href="/products/yoga">Yoga Socks</a></li>
+              <li><a href="/products/compression">Compression Sleeves</a></li>
+              <li><a href="/products/thigh-high">Thigh High Socks</a></li>
+              <li><a href="/products/medical">Medical Stockings</a></li>
+              <li><a href="/products/trampoline">Trampoline Socks</a></li>
+              <li><a href="/products/ankle">Ankle Grip Socks</a></li>
+              <li><a href="/products/knee-pads">Crawling Knee Pads</a></li>
+            </ul>
+          </div>
+
+          <div className="footer-column">
+            <h4 className="footer-col-title">GET IN TOUCH</h4>
+            <p className="footer-contact-text">
+              If you have any enquiries, please do not hesitate to contact us.
+            </p>
+          </div>
+        </div>
+
+        <div className="footer-bottom">
+          <p>Copyright © 2026 by Highgripsox. All Rights Reserved.</p>
+        </div>
       </footer>
     </div>
   );

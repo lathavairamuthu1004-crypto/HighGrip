@@ -3,27 +3,27 @@ import "./hero.css";
 
 const slides = [
   {
-    id: "01",
-    tag: "MEDICAL GRADE STABILITY",
-    title: "MAXIMUM",
-    highlight: "TRACTION",
-    desc: "Engineered with revolutionary non-slip technology for high-intensity athletes and patient recovery stages.",
-    img: "/assets/grounded.png",
+    id: "001",
+    tag: "Performance Engineering",
+    title: "ULTIMATE",
+    highlight: "STABILITY",
+    desc: "Engineered for high-intensity movement with medical-grade silicone traction.",
+    img: "/assets/grounded.png", // Replace with your actual path
   },
   {
-    id: "02",
-    tag: "PEDIATRIC SAFETY TECH",
-    title: "SENSORY",
-    highlight: "COMFORT",
-    desc: "The gold standard in pediatric stability. Maximum traction for crawling and early development stages.",
+    id: "002",
+    tag: "Pediatric Innovation",
+    title: "GENTLE",
+    highlight: "PROTECTION",
+    desc: "The safest grip technology for the world's smallest explorers.",
     img: "/assets/kneeprotect.png",
   },
   {
-    id: "03",
-    tag: "ELITE PERFORMANCE",
+    id: "003",
+    tag: "Luxury Aesthetics",
     title: "DYNAMIC",
-    highlight: "POWER",
-    desc: "Our signature compression-knit design with 360° silicone node technology for all-day confidence.",
+    highlight: "FLOW",
+    desc: "360-degree node distribution meets premium compression knit fabric.",
     img: "/assets/anklegrip.png",
   }
 ];
@@ -41,59 +41,53 @@ const Hero = () => {
   const slide = slides[index];
 
   return (
-    <section className="unified-hero">
-      {/* Ghost text background fills the gap between text and image */}
-      <div className="bg-watermark">{slide.highlight}</div>
+    <div className="hero-page-wrapper">
+      {/* 1. SEPARATED HEADER SPACER */}
+      <div className="header-offset"></div>
 
-      <div className="hero-grid" key={index}>
-        
-        {/* Left Side: Typography */}
-        <div className="text-canvas">
-          <div className="stagger-container">
-            <span className="premium-tag">{slide.tag}</span>
-            
-            <h1 className="hero-title">
-              <span className="block-text">{slide.title}</span>
-              <span className="outline-text">{slide.highlight}</span>
-            </h1>
-            
-            <p className="hero-description">{slide.desc}</p>
-            
-            <div className="hero-footer">
-              <button className="cta-primary">Explore Collection</button>
-              
-              <div className="step-indicator">
-                <span className="active-idx">0{index + 1}</span>
-                <div className="progress-line">
-                  <div className="progress-fill"></div>
-                </div>
-                <span className="total-idx">0{slides.length}</span>
+      <section className="modern-hero-section">
+        <div className="hero-container" key={index}>
+          
+          {/* 2. THE CONTENT CARD (Glassmorphism) */}
+          <div className="content-card">
+            <div className="brand-overlay"></div>
+            <div className="card-inner">
+              <span className="modern-tag">{slide.tag}</span>
+              <h1 className="modern-title">
+                {slide.title} <br />
+                <span className="weight-900">{slide.highlight}</span>
+              </h1>
+              <p className="modern-desc">{slide.desc}</p>
+              <button className="modern-cta">SHOP COLLECTIONS</button>
+
+              {/* 3. INTEGRATED THUMBNAILS (Reflecting the Canva Style) */}
+              <div className="modern-thumbnails">
+                {slides.map((s, i) => (
+                  <div 
+                    key={s.id} 
+                    className={`thumb-node ${i === index ? "active" : ""}`}
+                    onClick={() => setIndex(i)}
+                  >
+                    <img src={s.img} alt="nav" />
+                    <span className="thumb-label">{s.id}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Right Side: Medical/Sport Hexagon Mask */}
-        <div className="visual-canvas">
-          <div className="medical-shaper">
-            <div className="image-mask">
-               <img src={slide.img} alt={slide.title} className="hero-main-img" />
+          {/* 4. THE PRODUCT STAGE (Realistic Depth) */}
+          <div className="visual-stage">
+            <div className="stage-bg"></div>
+            <div className="image-wrapper">
+              <img src={slide.img} alt={slide.title} className="hero-product-img" />
+              <div className="realistic-shadow"></div>
             </div>
           </div>
-          
-          <div className="side-dots">
-            {slides.map((_, i) => (
-              <div 
-                key={i} 
-                className={`dot-item ${i === index ? "active" : ""}`}
-                onClick={() => setIndex(i)}
-              />
-            ))}
-          </div>
-        </div>
 
-      </div>
-    </section>
+        </div>
+      </section>
+    </div>
   );
 };
 

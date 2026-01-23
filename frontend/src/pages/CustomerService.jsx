@@ -13,7 +13,6 @@ const CustomerService = () => {
     const [activeFaq, setActiveFaq] = useState(null);
     const [view, setView] = useState("faq"); // "faq" or "chat"
 
-    // New Chat State
     const [showNewChatForm, setShowNewChatForm] = useState(false);
     const [startMessage, setStartMessage] = useState("");
 
@@ -21,34 +20,13 @@ const CustomerService = () => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 
     const faqs = [
-        {
-            q: "What makes Highgrip socks non-skid?",
-            a: "Our socks feature specially designed rubber grips on the sole that provide excellent traction on smooth surfaces, helping prevent slips and falls."
-        },
-        {
-            q: "Who can wear Highgrip socks?",
-            a: "Highgrip socks are designed for everyone! From toddlers taking their first steps to seniors looking for extra stability, our socks offer comfort and safety for all ages."
-        },
-        {
-            q: "Are Highgrip socks machine washable?",
-            a: "Yes, they are! We recommend washing them in cold water on a gentle cycle and air drying to maintain the integrity of the rubber grips."
-        },
-        {
-            q: "Do you offer different sizes?",
-            a: "Absolutely. We offer a wide range of sizes for babies, kids, and adults. Please check our size chart for the perfect fit."
-        },
-        {
-            q: "What are the rubber grips made of?",
-            a: "The grips are made from high-quality, non-toxic silicone that is durable and provides long-lasting traction."
-        },
-        {
-            q: "Are your socks suitable for hospital or medical use?",
-            a: "Yes, many customers use our socks in hospitals or for medical recovery because of their superior grip and comfort."
-        },
-        {
-            q: "Do you have socks for babies or toddlers?",
-            a: "Yes, we have a specific collection for little ones with extra-soft fabric and full-sole grip for safety."
-        }
+        { q: "What makes Highgrip socks non-skid?", a: "Our socks feature specially designed rubber grips on the sole that provide excellent traction on smooth surfaces, helping prevent slips and falls." },
+        { q: "Who can wear Highgrip socks?", a: "Highgrip socks are designed for everyone! From toddlers taking their first steps to seniors looking for extra stability, our socks offer comfort and safety for all ages." },
+        { q: "Are Highgrip socks machine washable?", a: "Yes, they are! We recommend washing them in cold water on a gentle cycle and air drying to maintain the integrity of the rubber grips." },
+        { q: "Do you offer different sizes?", a: "Absolutely. We offer a wide range of sizes for babies, kids, and adults. Please check our size chart for the perfect fit." },
+        { q: "What are the rubber grips made of?", a: "The grips are made from high-quality, non-toxic silicone that is durable and provides long-lasting traction." },
+        { q: "Are your socks suitable for hospital or medical use?", a: "Yes, many customers use our socks in hospitals or for medical recovery because of their superior grip and comfort." },
+        { q: "Do you have socks for babies or toddlers?", a: "Yes, we have a specific collection for little ones with extra-soft fabric and full-sole grip for safety." }
     ];
 
     useEffect(() => {
@@ -79,10 +57,7 @@ const CustomerService = () => {
         if (image) formData.append("image", image);
 
         try {
-            await fetch("http://localhost:5000/support", {
-                method: "POST",
-                body: formData
-            });
+            await fetch("http://localhost:5000/support", { method: "POST", body: formData });
             setStartMessage("");
             setImage(null);
             setPreview(null);
@@ -111,12 +86,10 @@ const CustomerService = () => {
             setImage(null);
             setPreview(null);
 
-            // Fetch updated chat data
             const res = await fetch(`http://localhost:5000/support/user/${user.email}`);
             const data = await res.json();
             setChats(data);
             setActiveChat(data.find(c => c._id === activeChat._id));
-
         } catch (err) {
             alert("Failed to send message");
         }
@@ -139,18 +112,11 @@ const CustomerService = () => {
             <Header />
 
             <main className="cs-main container">
-                {/* View Toggles */}
                 <div className="view-toggles">
-                    <button
-                        className={`toggle-btn ${view === "faq" ? "active" : ""}`}
-                        onClick={() => setView("faq")}
-                    >
+                    <button className={`toggle-btn ${view === "faq" ? "active" : ""}`} onClick={() => setView("faq")}>
                         Frequently Asked Questions
                     </button>
-                    <button
-                        className={`toggle-btn ${view === "chat" ? "active" : ""}`}
-                        onClick={() => setView("chat")}
-                    >
+                    <button className={`toggle-btn ${view === "chat" ? "active" : ""}`} onClick={() => setView("chat")}>
                         <FaHeadset /> Chat with Support
                     </button>
                 </div>
@@ -178,7 +144,6 @@ const CustomerService = () => {
                 ) : (
                     <section className="chat-interface">
                         <div className="chat-inner-container">
-                            {/* SIDEBAR: CHAT LIST */}
                             <div className={`cs-chat-sidebar ${activeChat ? 'mobile-hidden' : ''}`}>
                                 <div className="sidebar-header">
                                     <h2>Support History</h2>
@@ -186,17 +151,10 @@ const CustomerService = () => {
                                         <FaPlus /> New Chat
                                     </button>
                                 </div>
-
                                 <div className="cs-chat-list">
-                                    {chats.length === 0 ? (
-                                        <p className="no-chats">No previous chats found.</p>
-                                    ) : (
+                                    {chats.length === 0 ? <p className="no-chats">No previous chats found.</p> :
                                         chats.map(chat => (
-                                            <div
-                                                key={chat._id}
-                                                className={`cs-chat-item ${activeChat?._id === chat._id ? 'active' : ''}`}
-                                                onClick={() => setActiveChat(chat)}
-                                            >
+                                            <div key={chat._id} className={`cs-chat-item ${activeChat?._id === chat._id ? 'active' : ''}`} onClick={() => setActiveChat(chat)}>
                                                 <div className="chat-avatar">🎧</div>
                                                 <div className="chat-info">
                                                     <h4>{chat.subject}</h4>
@@ -204,14 +162,11 @@ const CustomerService = () => {
                                                 </div>
                                             </div>
                                         ))
-                                    )}
+                                    }
                                 </div>
                             </div>
 
-                            {/* MAIN AREA */}
                             <div className={`cs-chat-window ${!activeChat && !showNewChatForm ? 'empty' : ''} ${!activeChat && showNewChatForm ? 'mobile-hidden' : ''}`}>
-
-                                {/* 1. EMPTY STATE */}
                                 {!activeChat && !showNewChatForm && (
                                     <div className="no-chat-selected">
                                         <FaHeadset size={40} />
@@ -220,17 +175,11 @@ const CustomerService = () => {
                                     </div>
                                 )}
 
-                                {/* 2. NEW CHAT FORM */}
                                 {showNewChatForm && (
                                     <div className="new-chat-form-container">
                                         <h3>Tell us what you need</h3>
                                         <form onSubmit={handleStartChat}>
-                                            <textarea
-                                                placeholder="Describe your issue or question here..."
-                                                value={startMessage}
-                                                onChange={e => setStartMessage(e.target.value)}
-                                                required
-                                            />
+                                            <textarea placeholder="Describe your issue or question here..." value={startMessage} onChange={e => setStartMessage(e.target.value)} required />
                                             <div className="form-actions">
                                                 <label className="icon-btn">
                                                     <FaCloudUploadAlt />
@@ -244,16 +193,12 @@ const CustomerService = () => {
                                     </div>
                                 )}
 
-                                {/* 3. ACTIVE CHAT */}
                                 {activeChat && (
                                     <>
                                         <div className="chat-header">
-                                            <button className="mobile-back" onClick={() => setActiveChat(null)}>
-                                                <FaArrowLeft />
-                                            </button>
+                                            <button className="mobile-back" onClick={() => setActiveChat(null)}><FaArrowLeft /></button>
                                             <h3>{activeChat.subject}</h3>
                                         </div>
-
                                         <div className="messages-area">
                                             {activeChat.messages.map((msg, idx) => (
                                                 <div key={idx} className={`message-bubble ${msg.sender}`}>
@@ -261,9 +206,7 @@ const CustomerService = () => {
                                                         {msg.text}
                                                         {msg.image && <img src={`http://localhost:5000${msg.image}`} alt="attachment" />}
                                                     </div>
-                                                    <span className="message-time">
-                                                        {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                    </span>
+                                                    <span className="message-time">{new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                                 </div>
                                             ))}
                                         </div>
@@ -273,15 +216,8 @@ const CustomerService = () => {
                                                 <FaCloudUploadAlt />
                                                 <input type="file" hidden onChange={handleImageChange} />
                                             </label>
-                                            <input
-                                                type="text"
-                                                placeholder="Type your message..."
-                                                value={newMessage}
-                                                onChange={e => setNewMessage(e.target.value)}
-                                            />
-                                            <button type="submit" className="send-btn">
-                                                <FaPaperPlane />
-                                            </button>
+                                            <input type="text" placeholder="Type your message..." value={newMessage} onChange={e => setNewMessage(e.target.value)} />
+                                            <button type="submit" className="send-btn"><FaPaperPlane /></button>
                                         </form>
                                         {preview && (
                                             <div className="input-preview">
@@ -296,6 +232,54 @@ const CustomerService = () => {
                     </section>
                 )}
             </main>
+
+            {/* --- FOOTER --- */}
+            <footer className="footer-site">
+                <div className="footer-container">
+                    <div className="footer-column brand-col">
+                        <h4 className="footer-col-title">HIGHGRIP</h4>
+                        <p className="footer-address">
+                            Lakshmi Textile, Shed no 9,<br />
+                            SIDCO colony, Madurai main road,<br />
+                            Theni, Tamil Nadu, 625531
+                        </p>
+                    </div>
+
+                    <div className="footer-column">
+                        <h4 className="footer-col-title">QUICK LINKS</h4>
+            <ul className="footer-links">
+              <li><a href="/">Home</a></li>
+              <li><a href="/about">About Us</a></li>
+              <li><a href="/products">Our Products</a></li>
+              <li><a href="/customer-service">FAQ</a></li>
+              <li><a href="/contact">Contact Us</a></li></ul>
+                    </div>
+
+                    <div className="footer-column">
+                        <h4 className="footer-col-title">PRODUCTS</h4>
+                        <ul className="footer-links">
+                            <li><a href="/products/yoga">Yoga Socks</a></li>
+                            <li><a href="/products/compression">Compression Sleeves</a></li>
+                            <li><a href="/products/thigh-high">Thigh High Socks</a></li>
+                            <li><a href="/products/medical">Medical Stockings</a></li>
+                            <li><a href="/products/trampoline">Trampoline Socks</a></li>
+                            <li><a href="/products/ankle">Ankle Grip Socks</a></li>
+                            <li><a href="/products/knee-pads">Crawling Knee Pads</a></li>
+                        </ul>
+                    </div>
+
+                    <div className="footer-column">
+                        <h4 className="footer-col-title">GET IN TOUCH</h4>
+                        <p className="footer-contact-text">
+                            If you have any enquiries, please do not hesitate to contact us.
+                        </p>
+                    </div>
+                </div>
+
+                <div className="footer-bottom">
+                    <p>Copyright © 2026 by Highgripsox. All Rights Reserved.</p>
+                </div>
+            </footer>
         </div>
     );
 };

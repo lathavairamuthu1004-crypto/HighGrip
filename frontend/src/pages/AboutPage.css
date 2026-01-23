@@ -132,11 +132,26 @@
 }
 
 /* --- VISION GRID --- */
+/* --- VISION GRID --- */
 .vision-container {
   padding: 100px 8%;
   background: #fafafa;
 }
 
+/* Updated specifically for Black Text */
+.vision-card h3 {
+  color: #000000;
+  font-weight: 800; /* Keeps it looking bold and professional */
+  margin-bottom: 15px;
+}
+
+.vision-card p {
+  color: #000000;
+  opacity: 1; /* Ensures it is solid black, not grayed out */
+  line-height: 1.6;
+}
+
+/* This preserves your existing card logic */
 .vision-layout {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -156,7 +171,7 @@
 
 .v-icon {
   font-size: 35px;
-  color: var(--brand-color);
+  color: var(--brand-color); /* Preserves the Magenta icon */
   margin-bottom: 30px;
 }
 
@@ -226,10 +241,10 @@
 }
 
 .quote-text {
-  font-weight: 800;
+  font-weight: 900;
   font-size: clamp(2rem, 5vw, 4rem);
   margin-bottom: 20px;
-  color: #eee;
+  color: #FFE4E1;
   text-transform: uppercase;
   letter-spacing: -2px;
 }
