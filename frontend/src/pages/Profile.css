@@ -125,7 +125,7 @@
 }
 
 .pro-user-card h2 {
-  font-family: 'Syncopate', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 1.2rem;
   color: var(--ui-slate);
   margin: 0;
@@ -196,7 +196,7 @@
 }
 
 .header-title h3 {
-  font-family: 'Syncopate', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 1rem;
   letter-spacing: 1px;
   margin: 0;

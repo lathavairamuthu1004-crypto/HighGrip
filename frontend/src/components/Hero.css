@@ -8,6 +8,7 @@
   /* Offset for fixed header */
   overflow: hidden;
   background: #000;
+  margin-bottom: 30px;
 }
 
 .hero-slide {
