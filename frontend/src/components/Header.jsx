@@ -49,7 +49,6 @@ const Header = ({ onSearch }) => {
         <div className="nav-left">
           <Link to="/home" className="brand-logo">
             <img src="/logoo.png" alt="HighGrip Logo" />
-            <span className="logo-text">HIGHGRIP</span>
           </Link>
         </div>
 

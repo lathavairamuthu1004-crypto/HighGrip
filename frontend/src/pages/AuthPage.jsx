@@ -28,28 +28,28 @@ const AuthPage = () => {
   /* ===== Animations ===== */
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1, 
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 } 
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1, delayChildren: 0.2 }
     },
     exit: { opacity: 0, x: -20, transition: { duration: 0.2 } }
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: { 
-      y: 0, 
-      opacity: 1, 
-      transition: { type: 'spring', stiffness: 300, damping: 24 } 
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: 'spring', stiffness: 300, damping: 24 }
     }
   };
 
   const brandingVariants = {
     hidden: { x: -50, opacity: 0 },
-    visible: { 
-      x: 0, 
-      opacity: 1, 
-      transition: { duration: 0.8, ease: "easeOut", staggerChildren: 0.2 } 
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: { duration: 0.8, ease: "easeOut", staggerChildren: 0.2 }
     }
   };
 
@@ -120,13 +120,10 @@ const AuthPage = () => {
             <div className="brand-icon" style={{ background: "none", boxShadow: "none" }}>
               <img src="/logoo.png" alt="HIGHGRIP Shoes" style={{ width: "100%", borderRadius: "14px" }} />
             </div>
-            <h1 className="brand-name" style={{ color: "#e53935" }}>
-              HIGHGRIP SHOES
-            </h1>
           </motion.div>
 
           <motion.h2 variants={itemVariants} className="brand-headline">
-            Step Into <br /> 
+            Step Into <br />
             <span className="highlight-text">Premium Footwear</span>
           </motion.h2>
 
