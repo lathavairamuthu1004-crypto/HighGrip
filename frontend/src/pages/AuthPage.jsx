@@ -66,7 +66,7 @@ const AuthPage = () => {
     }
 
     try {
-      const res = await fetch("${API_BASE_URL}/signup", {
+      const res = await fetch(`${API_BASE_URL}/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password })
@@ -87,7 +87,7 @@ const AuthPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("${API_BASE_URL}/login", {
+    const res = await fetch(`${API_BASE_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
@@ -345,5 +345,6 @@ const AuthPage = () => {
 };
 
 export default AuthPage;
+
 
 

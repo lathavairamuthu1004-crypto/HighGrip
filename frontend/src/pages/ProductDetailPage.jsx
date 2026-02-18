@@ -88,7 +88,7 @@ const ProductDetailPage = () => {
     });
 
     try {
-      const res = await fetch("${API_BASE_URL}/reviews", {
+      const res = await fetch(`${API_BASE_URL}/reviews`, {
         method: "POST",
         body: formData,
       });
@@ -389,4 +389,5 @@ const ProductDetailPage = () => {
 };
 
 export default ProductDetailPage;
+
 

@@ -18,7 +18,7 @@ const AddProduct = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("${API_BASE_URL}/categories")
+    fetch(`${API_BASE_URL}/categories`)
       .then((res) => res.json())
       .then((data) => setCategories(data));
   }, []);
@@ -39,7 +39,7 @@ const AddProduct = () => {
 
     const token = localStorage.getItem("token");
 
-    const res = await fetch("${API_BASE_URL}/admin/product", {
+    const res = await fetch(`${API_BASE_URL}/admin/product`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`
@@ -119,5 +119,6 @@ const AddProduct = () => {
 };
 
 export default AddProduct;
+
 
 

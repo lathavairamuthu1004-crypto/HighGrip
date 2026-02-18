@@ -82,7 +82,7 @@ const Checkout = () => {
       }
 
       const orderPromises = checkoutItems.map(item =>
-        fetch("${API_BASE_URL}/orders", {
+        fetch(`${API_BASE_URL}/orders`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -490,5 +490,6 @@ const Checkout = () => {
 };
 
 export default Checkout;
+
 
 

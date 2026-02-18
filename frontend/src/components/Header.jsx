@@ -20,7 +20,7 @@ const Header = ({ onSearch }) => {
 
   // Fetch categories for dropdown
   useEffect(() => {
-    fetch("${API_BASE_URL}/categories")
+    fetch(`${API_BASE_URL}/categories`)
       .then(res => res.json())
       .then(data => setCategories(data))
       .catch(err => console.error("Failed to fetch categories", err));
@@ -185,5 +185,6 @@ const Header = ({ onSearch }) => {
 };
 
 export default Header;
+
 
 

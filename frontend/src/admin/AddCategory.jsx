@@ -13,7 +13,7 @@ const AddCategory = () => {
 
   // Fetch categories
   const fetchCategories = async () => {
-    const res = await fetch("${API_BASE_URL}/categories");
+    const res = await fetch(`${API_BASE_URL}/categories`);
     const data = await res.json();
     setCategories(data);
   };
@@ -38,7 +38,7 @@ const AddCategory = () => {
       });
       setEditId(null);
     } else {
-      await fetch("${API_BASE_URL}/admin/category", {
+      await fetch(`${API_BASE_URL}/admin/category`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -122,5 +122,6 @@ const AddCategory = () => {
 };
 
 export default AddCategory;
+
 
 

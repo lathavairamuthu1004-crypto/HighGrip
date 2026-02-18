@@ -54,7 +54,7 @@ const OrdersPage = () => {
         formData.append("comment", comment);
 
         try {
-            const res = await fetch("${API_BASE_URL}/reviews", {
+            const res = await fetch(`${API_BASE_URL}/reviews`, {
                 method: "POST",
                 body: formData,
             });
@@ -218,4 +218,5 @@ const OrdersPage = () => {
 };
 
 export default OrdersPage;
+
 

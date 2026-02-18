@@ -36,7 +36,7 @@ const AdminOrdersPage = () => {
       setLoading(true);
       const token = localStorage.getItem("token");
 
-      let url = "${API_BASE_URL}/admin/orders";
+      let url = `${API_BASE_URL}/admin/orders`;
       if (fromDate && toDate) {
         url += `?from=${fromDate}&to=${toDate}`;
       }
@@ -233,5 +233,6 @@ const AdminOrdersPage = () => {
 };
 
 export default AdminOrdersPage;
+
 
 

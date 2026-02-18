@@ -63,7 +63,7 @@ export const CartProvider = ({ children }) => {
 
     if (userEmail) {
       try {
-        await fetch("${API_BASE_URL}/cart", {
+        await fetch(`${API_BASE_URL}/cart`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -107,7 +107,7 @@ export const CartProvider = ({ children }) => {
 
     if (userEmail) {
       try {
-        await fetch("${API_BASE_URL}/cart/update-qty", {
+        await fetch(`${API_BASE_URL}/cart/update-qty`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userEmail, productId: id, qty: newQty })
@@ -127,4 +127,5 @@ export const CartProvider = ({ children }) => {
 };
 
 export const useCart = () => useContext(CartContext);
+
 

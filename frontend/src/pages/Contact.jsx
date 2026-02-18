@@ -29,7 +29,7 @@ const Contact = () => {
     }
 
     try {
-      const res = await fetch("${API_BASE_URL}/support", {
+      const res = await fetch(`${API_BASE_URL}/support`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -193,5 +193,6 @@ const Contact = () => {
 };
 
 export default Contact;
+
 
 

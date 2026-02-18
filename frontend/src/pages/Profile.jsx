@@ -69,7 +69,7 @@ const Profile = () => {
 
   const handleAddAddress = async () => {
     if (!addressText) return alert("Address required");
-    const res = await fetch("${API_BASE_URL}/user/address", {
+    const res = await fetch(`${API_BASE_URL}/user/address`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: userEmail, label: addressLabel || "Other", address: addressText })
@@ -83,7 +83,7 @@ const Profile = () => {
 
   const handleChangePassword = async () => {
     if (!newPassword || newPassword !== confirmPassword) return alert("Passwords do not match");
-    const res = await fetch("${API_BASE_URL}/user/update-password", {
+    const res = await fetch(`${API_BASE_URL}/user/update-password`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: userEmail, currentPassword, newPassword })
@@ -222,4 +222,5 @@ const Profile = () => {
 };
 
 export default Profile;
+
 

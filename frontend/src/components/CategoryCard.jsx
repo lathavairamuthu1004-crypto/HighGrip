@@ -65,3 +65,4 @@ const CategoryCard = ({ product }) => {
 export default CategoryCard;
 
 
+

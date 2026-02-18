@@ -58,7 +58,7 @@ const CustomerService = () => {
         if (image) formData.append("image", image);
 
         try {
-            await fetch("${API_BASE_URL}/support", { method: "POST", body: formData });
+            await fetch(`${API_BASE_URL}/support`, { method: "POST", body: formData });
             setStartMessage("");
             setImage(null);
             setPreview(null);
@@ -286,5 +286,6 @@ const CustomerService = () => {
 };
 
 export default CustomerService;
+
 
 

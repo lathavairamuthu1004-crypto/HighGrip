@@ -38,8 +38,8 @@ const AdminDashboard = () => {
       setLoading(true);
 
       const [productsRes, ordersRes] = await Promise.all([
-        fetch("${API_BASE_URL}/products"),
-        fetch("${API_BASE_URL}/admin/orders", {
+        fetch(`${API_BASE_URL}/products`),
+        fetch(`${API_BASE_URL}/admin/orders`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -139,5 +139,6 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+
 
 

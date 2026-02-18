@@ -22,7 +22,7 @@ const AdminSupportPage = () => {
     const fetchChats = async () => {
         try {
             const token = localStorage.getItem("token");
-            const res = await fetch("${API_BASE_URL}/admin/support", {
+            const res = await fetch(`${API_BASE_URL}/admin/support`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const data = await res.json();
@@ -60,7 +60,7 @@ const AdminSupportPage = () => {
             fetchChats();
 
             // Optimistic update or refetch
-            const res = await fetch("${API_BASE_URL}/support/admin", {
+            const res = await fetch(`${API_BASE_URL}/support/admin`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const data = await res.json();
@@ -200,5 +200,6 @@ const AdminSupportPage = () => {
 };
 
 export default AdminSupportPage;
+
 
 
