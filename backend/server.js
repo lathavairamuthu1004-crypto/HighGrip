@@ -32,7 +32,7 @@ const verifyAdmin = (req, res, next) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ message: "No token" });
-    const decoded = jwt.verify(token, "SECRET_KEY");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "SECRET_KEY");
     if (!decoded.isAdmin) return res.status(403).json({ message: "Admin only" });
     req.user = decoded;
     next();
@@ -350,7 +350,7 @@ app.post("/login", async (req, res) => {
 
   const token = jwt.sign(
     { id: user._id, isAdmin: user.isAdmin },
-    "SECRET_KEY",
+    process.env.JWT_SECRET || "SECRET_KEY",
     { expiresIn: "1d" }
   );
 
@@ -691,4 +691,5 @@ app.post("/cart/update-qty", async (req, res) => {
 });
 
 /* ================= SERVER ================= */
-app.listen(5000, "0.0.0.0", () => console.log("Server running on port 5000"));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, "0.0.0.0", () => console.log(`Server running on port ${PORT}`));

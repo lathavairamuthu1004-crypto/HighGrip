@@ -5,6 +5,8 @@ import SidebarFilters from "../components/SidebarFilters";
 import Hero from "../components/Hero";
 import CollectionGrid from "../components/CollectionGrid";
 import ProductCard from "../components/ProductCard";
+import API_BASE_URL from "../apiConfig";
+
 import "./HomePage.css";
 
 export default function Home() {
@@ -52,7 +54,7 @@ export default function Home() {
   ];
 
   useEffect(() => {
-    fetch("http://localhost:5000/products")
+    fetch(`${API_BASE_URL}/products`)
       .then((res) => res.json())
       .then((data) => {
         setAllProducts(data);
