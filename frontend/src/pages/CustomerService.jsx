@@ -1,3 +1,4 @@
+import API_BASE_URL from '../apiConfig';
 import React, { useState, useEffect } from "react";
 import { FaCloudUploadAlt, FaTimes, FaArrowLeft, FaPaperPlane, FaPlus, FaChevronDown, FaChevronUp, FaHeadset } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -35,7 +36,7 @@ const CustomerService = () => {
 
     const fetchChats = async () => {
         try {
-            const res = await fetch(`http://localhost:5000/support/user/${user.email}`);
+            const res = await fetch(`${API_BASE_URL}/support/user/${user.email}`);
             const data = await res.json();
             setChats(data);
         } catch (err) {
@@ -57,7 +58,7 @@ const CustomerService = () => {
         if (image) formData.append("image", image);
 
         try {
-            await fetch("http://localhost:5000/support", { method: "POST", body: formData });
+            await fetch("${API_BASE_URL}/support", { method: "POST", body: formData });
             setStartMessage("");
             setImage(null);
             setPreview(null);
@@ -78,7 +79,7 @@ const CustomerService = () => {
         if (image) formData.append("image", image);
 
         try {
-            await fetch(`http://localhost:5000/support/${activeChat._id}/message`, {
+            await fetch(`${API_BASE_URL}/support/${activeChat._id}/message`, {
                 method: "PUT",
                 body: formData
             });
@@ -86,7 +87,7 @@ const CustomerService = () => {
             setImage(null);
             setPreview(null);
 
-            const res = await fetch(`http://localhost:5000/support/user/${user.email}`);
+            const res = await fetch(`${API_BASE_URL}/support/user/${user.email}`);
             const data = await res.json();
             setChats(data);
             setActiveChat(data.find(c => c._id === activeChat._id));
@@ -204,7 +205,7 @@ const CustomerService = () => {
                                                 <div key={idx} className={`message-bubble ${msg.sender}`}>
                                                     <div className="message-content">
                                                         {msg.text}
-                                                        {msg.image && <img src={`http://localhost:5000${msg.image}`} alt="attachment" />}
+                                                        {msg.image && <img src={`${API_BASE_URL}${msg.image}`} alt="attachment" />}
                                                     </div>
                                                     <span className="message-time">{new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                                 </div>
@@ -285,3 +286,5 @@ const CustomerService = () => {
 };
 
 export default CustomerService;
+
+

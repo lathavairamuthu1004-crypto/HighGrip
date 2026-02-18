@@ -1,3 +1,4 @@
+import API_BASE_URL from '../apiConfig';
 import React, { useState } from "react";
 import { FaHeart, FaEye, FaShoppingCart, FaStar } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -54,7 +55,7 @@ const ProductCard = ({ product }) => {
           <FaHeart />
         </button>
 
-        <img src={`http://localhost:5000${product.image}`} alt={product.name} />
+        <img src={`${API_BASE_URL}${product.image}`} alt={product.name} />
 
         {showAdded && <div className="added-toast">Product added to cart</div>}
         {showWishAdded && <div className="added-toast">Added to wishlist</div>}
@@ -95,3 +96,4 @@ const ProductCard = ({ product }) => {
 };
 
 export default ProductCard;
+

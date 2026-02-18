@@ -1,3 +1,4 @@
+import API_BASE_URL from '../apiConfig';
 import React from "react";
 import { FaCheck, FaShoppingCart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +26,7 @@ const CategoryCard = ({ product }) => {
         <div className="category-card">
             <div className="category-image-wrapper">
                 <img
-                    src={`http://localhost:5000${product.image}`}
+                    src={`${API_BASE_URL}${product.image}`}
                     alt={product.name}
                     className="category-img"
                 />
@@ -62,3 +63,5 @@ const CategoryCard = ({ product }) => {
 };
 
 export default CategoryCard;
+
+

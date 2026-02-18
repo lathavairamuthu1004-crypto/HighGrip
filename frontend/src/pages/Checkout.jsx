@@ -1,3 +1,4 @@
+import API_BASE_URL from '../apiConfig';
 import React, { useState } from 'react';
 import { useCart } from "../context/CartContext";
 import { ChevronLeft, Lock, FileText } from 'lucide-react';
@@ -81,7 +82,7 @@ const Checkout = () => {
       }
 
       const orderPromises = checkoutItems.map(item =>
-        fetch("http://localhost:5000/orders", {
+        fetch("${API_BASE_URL}/orders", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -403,7 +404,7 @@ const Checkout = () => {
                     {/* ✅ Robust Image Loading Logic */}
                     <img
                       src={(item.image || item.img || "").startsWith("/")
-                        ? `http://localhost:5000${item.image || item.img}`
+                        ? `${API_BASE_URL}${item.image || item.img}`
                         : (item.image || item.img || "https://via.placeholder.com/80")}
                       alt={item.name}
                     />
@@ -489,3 +490,5 @@ const Checkout = () => {
 };
 
 export default Checkout;
+
+

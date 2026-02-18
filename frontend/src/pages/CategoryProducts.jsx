@@ -1,3 +1,4 @@
+import API_BASE_URL from '../apiConfig';
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
@@ -12,7 +13,7 @@ const CategoryProducts = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:5000/products/category/${category}`)
+    fetch(`${API_BASE_URL}/products/category/${category}`)
       .then(res => res.json())
       .then(data => {
         setProducts(data || []);
@@ -55,3 +56,5 @@ const CategoryProducts = () => {
 };
 
 export default CategoryProducts;
+
+

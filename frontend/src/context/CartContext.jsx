@@ -1,3 +1,4 @@
+import API_BASE_URL from '../apiConfig';
 // src/context/CartContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
 
@@ -19,7 +20,7 @@ export const CartProvider = ({ children }) => {
   // Initial fetch from backend if user is logged in
   useEffect(() => {
     if (userEmail) {
-      fetch(`http://localhost:5000/cart/${userEmail}`)
+      fetch(`${API_BASE_URL}/cart/${userEmail}`)
         .then(res => res.json())
         .then(data => {
           if (Array.isArray(data) && data.length > 0) {
@@ -38,7 +39,7 @@ export const CartProvider = ({ children }) => {
     // 2. Sync with Backend (Delete the entire cart for this user)
     if (userEmail) {
       try {
-        await fetch(`http://localhost:5000/cart/${userEmail}`, {
+        await fetch(`${API_BASE_URL}/cart/${userEmail}`, {
           method: "DELETE",
         });
         console.log("Backend cart cleared successfully");
@@ -62,7 +63,7 @@ export const CartProvider = ({ children }) => {
 
     if (userEmail) {
       try {
-        await fetch("http://localhost:5000/cart", {
+        await fetch("${API_BASE_URL}/cart", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -86,7 +87,7 @@ export const CartProvider = ({ children }) => {
     setCart(prev => prev.filter(p => p.productId !== id));
     if (userEmail) {
       try {
-        await fetch(`http://localhost:5000/cart/${userEmail}/${id}`, {
+        await fetch(`${API_BASE_URL}/cart/${userEmail}/${id}`, {
           method: "DELETE"
         });
       } catch (err) {
@@ -106,7 +107,7 @@ export const CartProvider = ({ children }) => {
 
     if (userEmail) {
       try {
-        await fetch("http://localhost:5000/cart/update-qty", {
+        await fetch("${API_BASE_URL}/cart/update-qty", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userEmail, productId: id, qty: newQty })
@@ -126,3 +127,4 @@ export const CartProvider = ({ children }) => {
 };
 
 export const useCart = () => useContext(CartContext);
+

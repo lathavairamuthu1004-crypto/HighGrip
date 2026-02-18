@@ -1,3 +1,4 @@
+import API_BASE_URL from '../apiConfig';
 import React, { useState } from "react";
 import {
   MapPin,
@@ -28,7 +29,7 @@ const Contact = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/support", {
+      const res = await fetch("${API_BASE_URL}/support", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -192,3 +193,5 @@ const Contact = () => {
 };
 
 export default Contact;
+
+

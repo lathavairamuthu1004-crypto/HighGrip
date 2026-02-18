@@ -1,3 +1,4 @@
+import API_BASE_URL from '../apiConfig';
 import React, { useState, useRef, useEffect } from "react";
 import { FaCommentDots, FaTimes, FaPaperPlane } from "react-icons/fa";
 import "./FloatingChat.css";
@@ -21,7 +22,7 @@ const FloatingChat = () => {
   useEffect(() => {
     if (isOpen && user) {
       // Load previous messages for this user
-      fetch(`http://localhost:5000/support/history/${encodeURIComponent(user.email)}`)
+      fetch(`${API_BASE_URL}/support/history/${encodeURIComponent(user.email)}`)
         .then(res => res.json())
         .then(data => {
           console.log("Messages loaded:", data);
@@ -67,7 +68,7 @@ const FloatingChat = () => {
     setMessages(prev => [...prev, userMessage]);
 
     try {
-      const res = await fetch("http://localhost:5000/support", {
+      const res = await fetch("${API_BASE_URL}/support", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -155,3 +156,5 @@ const FloatingChat = () => {
 };
 
 export default FloatingChat;
+
+

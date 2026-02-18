@@ -1,3 +1,4 @@
+import API_BASE_URL from '../apiConfig';
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaSearch, FaUser, FaHeart, FaShoppingCart, FaBars, FaTimes, FaChevronDown } from "react-icons/fa";
@@ -19,7 +20,7 @@ const Header = ({ onSearch }) => {
 
   // Fetch categories for dropdown
   useEffect(() => {
-    fetch("http://localhost:5000/categories")
+    fetch("${API_BASE_URL}/categories")
       .then(res => res.json())
       .then(data => setCategories(data))
       .catch(err => console.error("Failed to fetch categories", err));
@@ -184,3 +185,5 @@ const Header = ({ onSearch }) => {
 };
 
 export default Header;
+
+

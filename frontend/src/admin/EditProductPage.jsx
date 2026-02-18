@@ -1,3 +1,4 @@
+import API_BASE_URL from '../apiConfig';
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import "./EditProductPage.css";
@@ -22,14 +23,14 @@ const EditProductPage = () => {
     discountEnd: "",
   });
   useEffect(() => {
-    fetch("http://localhost:5000/categories")
+    fetch("${API_BASE_URL}/categories")
       .then(res => res.json())
       .then(data => setCategories(data))
       .catch(err => console.error("Failed to fetch categories", err));
   }, []);
   
   useEffect(() => {
-    fetch(`http://localhost:5000/products/${id}`)
+    fetch(`${API_BASE_URL}/products/${id}`)
       .then(res => res.json())
       .then(data => {
         setForm({
@@ -61,7 +62,7 @@ const EditProductPage = () => {
           description: form.description,
         };
 
-    const res = await fetch(`http://localhost:5000/admin/product/${id}`, {
+    const res = await fetch(`${API_BASE_URL}/admin/product/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -191,3 +192,5 @@ const EditProductPage = () => {
 };
 
 export default EditProductPage;
+
+

@@ -1,3 +1,4 @@
+import API_BASE_URL from '../apiConfig';
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AddProduct.css";
@@ -17,7 +18,7 @@ const AddProduct = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/categories")
+    fetch("${API_BASE_URL}/categories")
       .then((res) => res.json())
       .then((data) => setCategories(data));
   }, []);
@@ -38,7 +39,7 @@ const AddProduct = () => {
 
     const token = localStorage.getItem("token");
 
-    const res = await fetch("http://localhost:5000/admin/product", {
+    const res = await fetch("${API_BASE_URL}/admin/product", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`
@@ -118,3 +119,5 @@ const AddProduct = () => {
 };
 
 export default AddProduct;
+
+

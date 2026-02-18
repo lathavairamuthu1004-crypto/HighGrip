@@ -1,3 +1,4 @@
+import API_BASE_URL from '../apiConfig';
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Trash2, ArrowLeft, Search, Edit } from "lucide-react";
@@ -23,7 +24,7 @@ const RemoveProductPage = () => {
 
     const fetchProducts = async () => {
         try {
-            const res = await fetch("http://localhost:5000/products");
+            const res = await fetch("${API_BASE_URL}/products");
             const data = await res.json();
             setProducts(data);
             setLoading(false);
@@ -39,7 +40,7 @@ const RemoveProductPage = () => {
         const token = localStorage.getItem("token");
 
         try {
-            const res = await fetch(`http://localhost:5000/admin/product/${productId}`, {
+            const res = await fetch(`${API_BASE_URL}/admin/product/${productId}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -93,7 +94,7 @@ const RemoveProductPage = () => {
                                 <div key={product._id} className="rp-item">
                                     <div className="rp-item-info">
                                         <img
-                                            src={`http://localhost:5000${product.image}`}
+                                            src={`${API_BASE_URL}${product.image}`}
                                             alt={product.name}
                                             onError={(e) => (e.target.src = "https://via.placeholder.com/50")}
                                         />
@@ -139,3 +140,5 @@ const RemoveProductPage = () => {
 };
 
 export default RemoveProductPage;
+
+

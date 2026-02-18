@@ -1,3 +1,4 @@
+import API_BASE_URL from '../apiConfig';
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaStar, FaBoxOpen, FaArrowLeft, FaCheck } from "react-icons/fa";
@@ -16,7 +17,7 @@ const OrdersPage = () => {
 
     useEffect(() => {
         if (user?.email) {
-            fetch(`http://localhost:5000/orders/${user.email}`)
+            fetch(`${API_BASE_URL}/orders/${user.email}`)
                 .then((res) => res.json())
                 .then((data) => {
                     setOrders(data);
@@ -53,7 +54,7 @@ const OrdersPage = () => {
         formData.append("comment", comment);
 
         try {
-            const res = await fetch("http://localhost:5000/reviews", {
+            const res = await fetch("${API_BASE_URL}/reviews", {
                 method: "POST",
                 body: formData,
             });
@@ -73,7 +74,7 @@ const OrdersPage = () => {
 
     const updateOrderStatus = async (orderId, nextStatus) => {
         try {
-            const res = await fetch(`http://localhost:5000/orders/${orderId}/status`, {
+            const res = await fetch(`${API_BASE_URL}/orders/${orderId}/status`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status: nextStatus })
@@ -217,3 +218,4 @@ const OrdersPage = () => {
 };
 
 export default OrdersPage;
+

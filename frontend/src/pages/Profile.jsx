@@ -1,3 +1,4 @@
+import API_BASE_URL from '../apiConfig';
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWishlist } from "../context/WishlistContext";
@@ -47,9 +48,9 @@ const Profile = () => {
 
   useEffect(() => {
     Promise.all([
-      fetch(`http://localhost:5000/user/${userEmail}`).then(r => r.json()).catch(() => null),
-      fetch(`http://localhost:5000/orders/${userEmail}`).then(r => r.json()).catch(() => []),
-      fetch(`http://localhost:5000/wishlist/${userEmail}`).then(r => r.json()).catch(() => [])
+      fetch(`${API_BASE_URL}/user/${userEmail}`).then(r => r.json()).catch(() => null),
+      fetch(`${API_BASE_URL}/orders/${userEmail}`).then(r => r.json()).catch(() => []),
+      fetch(`${API_BASE_URL}/wishlist/${userEmail}`).then(r => r.json()).catch(() => [])
     ])
       .then(([userData, ordersData, wishlistData]) => {
         const safeUser = userData && userData.email ? userData : userLocal;
@@ -68,7 +69,7 @@ const Profile = () => {
 
   const handleAddAddress = async () => {
     if (!addressText) return alert("Address required");
-    const res = await fetch("http://localhost:5000/user/address", {
+    const res = await fetch("${API_BASE_URL}/user/address", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: userEmail, label: addressLabel || "Other", address: addressText })
@@ -82,7 +83,7 @@ const Profile = () => {
 
   const handleChangePassword = async () => {
     if (!newPassword || newPassword !== confirmPassword) return alert("Passwords do not match");
-    const res = await fetch("http://localhost:5000/user/update-password", {
+    const res = await fetch("${API_BASE_URL}/user/update-password", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: userEmail, currentPassword, newPassword })
@@ -221,3 +222,4 @@ const Profile = () => {
 };
 
 export default Profile;
+
